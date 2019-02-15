@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,8 @@
 		71A9BB0B221695B3001064FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71A9BB09221695B3001064FD /* LaunchScreen.storyboard */; };
 		71A9BB16221695B3001064FD /* PureMusicPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A9BB15221695B3001064FD /* PureMusicPlayerTests.swift */; };
 		71A9BB21221695B3001064FD /* PureMusicPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A9BB20221695B3001064FD /* PureMusicPlayerUITests.swift */; };
+		71F032D8221696F10019D20B /* PureMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71F032D7221696F10019D20B /* PureMusicPlayer.m */; };
+		71F032DA2216A2020019D20B /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F032D92216A2020019D20B /* default.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,10 @@
 		71A9BB1C221695B3001064FD /* PureMusicPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PureMusicPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71A9BB20221695B3001064FD /* PureMusicPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PureMusicPlayerUITests.swift; sourceTree = "<group>"; };
 		71A9BB22221695B3001064FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PureMusicPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
+		71F032D6221696F10019D20B /* PureMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureMusicPlayer.h; sourceTree = "<group>"; };
+		71F032D7221696F10019D20B /* PureMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PureMusicPlayer.m; sourceTree = "<group>"; };
+		71F032D92216A2020019D20B /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +103,16 @@
 		71A9BAFF221695B1001064FD /* PureMusicPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				71F032D92216A2020019D20B /* default.png */,
+				71F032D6221696F10019D20B /* PureMusicPlayer.h */,
+				71F032D7221696F10019D20B /* PureMusicPlayer.m */,
 				71A9BB00221695B1001064FD /* AppDelegate.swift */,
 				71A9BB02221695B1001064FD /* ViewController.swift */,
 				71A9BB04221695B1001064FD /* Main.storyboard */,
 				71A9BB07221695B3001064FD /* Assets.xcassets */,
 				71A9BB09221695B3001064FD /* LaunchScreen.storyboard */,
 				71A9BB0C221695B3001064FD /* Info.plist */,
+				71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */,
 			);
 			path = PureMusicPlayer;
 			sourceTree = "<group>";
@@ -193,6 +203,12 @@
 				TargetAttributes = {
 					71A9BAFC221695B1001064FD = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					71A9BB10221695B3001064FD = {
 						CreatedOnToolsVersion = 10.1;
@@ -205,7 +221,7 @@
 				};
 			};
 			buildConfigurationList = 71A9BAF8221695B1001064FD /* Build configuration list for PBXProject "PureMusicPlayer" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -232,6 +248,7 @@
 				71A9BB0B221695B3001064FD /* LaunchScreen.storyboard in Resources */,
 				71A9BB08221695B3001064FD /* Assets.xcassets in Resources */,
 				71A9BB06221695B1001064FD /* Main.storyboard in Resources */,
+				71F032DA2216A2020019D20B /* default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				71A9BB03221695B1001064FD /* ViewController.swift in Sources */,
+				71F032D8221696F10019D20B /* PureMusicPlayer.m in Sources */,
 				71A9BB01221695B1001064FD /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,15 +450,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MCR9S6SHER;
 				INFOPLIST_FILE = PureMusicPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = hoge.fuga.piyo.PureMusicPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PureMusicPlayer/PureMusicPlayer-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -450,15 +472,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MCR9S6SHER;
 				INFOPLIST_FILE = PureMusicPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = hoge.fuga.piyo.PureMusicPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PureMusicPlayer/PureMusicPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
