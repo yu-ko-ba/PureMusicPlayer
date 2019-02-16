@@ -28,11 +28,15 @@ class ViewController: UIViewController {
         DispatchQueue.main.async {
             if let artwork = self.player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) {
                 self.artworkView.image = artwork
+            } else {
+                self.artworkView.image = self.defaultArtwork
             }
             self.artistLabel.text = self.player.currentArtist
             self.albumLabel.text = self.player.currentAlbumTitle
             self.titleLabel.text = self.player.currentTitle
         }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: player.currentArtist, MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle, MPMediaItemPropertyTitle: player.currentTitle]
     }
     
     
@@ -73,6 +77,33 @@ class ViewController: UIViewController {
         Re_initAudioUnitButton.titleLabel?.numberOfLines = 2
         
         player.delegate = self
+        
+        // コントロールセンターの設定
+        let commandCenter: MPRemoteCommandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.addTarget { (event) in
+            self.player.play()
+            return MPRemoteCommandHandlerStatus.success
+        }
+        commandCenter.pauseCommand.addTarget { (event) in
+            self.player.pause()
+            return MPRemoteCommandHandlerStatus.success
+        }
+        commandCenter.togglePlayPauseCommand.addTarget { (event) in
+            self.player.togglePlayPause()
+            return MPRemoteCommandHandlerStatus.success
+        }
+        commandCenter.stopCommand.addTarget { (event) in
+            self.player.stop()
+            return MPRemoteCommandHandlerStatus.success
+        }
+        commandCenter.previousTrackCommand.addTarget { (event) in
+            self.player.skipToPrevious()
+            return MPRemoteCommandHandlerStatus.success
+        }
+        commandCenter.nextTrackCommand.addTarget { (event) in
+            self.player.skipToNext()
+            return MPRemoteCommandHandlerStatus.success
+        }
     }
     
 
@@ -85,22 +116,19 @@ class ViewController: UIViewController {
     
     
     @IBAction func togglePlayPauseButtonPushed(_ sender: UIButton) {
-        if player.playingNow {
-            player.pause()
-        } else if player.canPlay {
-            player.play()
-        }
-        togglePlayPauseButtonSetCurrentStatus()
+        player.togglePlayPause()
+        
+//        if player.playingNow {
+//            player.pause()
+//        } else if player.canPlay {
+//            player.play()
+//        }
+//        togglePlayPauseButtonSetCurrentStatus()
     }
     
     
     @IBAction func stopButtonPushed(_ sender: UIButton) {
         player.stop()
-        
-        artworkView.image = defaultArtwork
-        artistLabel.text = "Artist"
-        albumLabel.text = "Album"
-        titleLabel.text = "Title"
     }
     
     
@@ -147,6 +175,11 @@ extension ViewController: PMPDelegate {
     }
     
     
+    func thisFunctionCallWhenPlayingStart() {
+        togglePlayPauseButtonSetCurrentStatus()
+    }
+    
+    
     func thisFunctionCallWhenMusicPaused() {
         togglePlayPauseButtonSetCurrentStatus()
         pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus()
@@ -156,5 +189,12 @@ extension ViewController: PMPDelegate {
     func thisFunctionCallWhenMusicStopped() {
         togglePlayPauseButtonSetCurrentStatus()
         pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus()
+        
+        artworkView.image = defaultArtwork
+        artistLabel.text = "Artist"
+        albumLabel.text = "Album"
+        titleLabel.text = "Title"
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: "Artist", MPMediaItemPropertyAlbumTitle: "Album", MPMediaItemPropertyTitle: "Title"]
     }
 }

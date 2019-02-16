@@ -164,6 +164,32 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
         playingNow = YES;
         
         AudioOutputUnitStart(audioUnit);
+        
+        if ([self.delegate respondsToSelector:@selector(thisFunctionCallWhenPlayingStart)]) {
+            [self.delegate thisFunctionCallWhenPlayingStart];
+        }
+    }
+}
+
+
+- (void)pause {
+    if (playingNow) {
+        printf("再生を一時停止します\n");
+        playingNow = NO;
+        AudioOutputUnitStop(audioUnit);
+        
+        if ([self.delegate respondsToSelector:@selector(thisFunctionCallWhenMusicPaused)]) {
+            [self.delegate thisFunctionCallWhenMusicPaused];
+        }
+    }
+}
+
+
+- (void)togglePlayPause {
+    if (playingNow) {
+        [self pause];
+    } else if (canPlay) {
+        [self play];
     }
 }
 
@@ -180,20 +206,6 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
     
     if ([self.delegate respondsToSelector:@selector(thisFunctionCallWhenMusicStopped)]) {
         [self.delegate thisFunctionCallWhenMusicStopped];
-    }
-}
-
-
-// 連打しても大丈夫。
-- (void)skipToNext {
-    if (canPlay) {
-        if ((playingNow) && !(currentMusicNumber >= playlistLength)) {
-            AudioOutputUnitStop(audioUnit);
-            [self skipToNextForCallback];
-            [self play];
-        } else {
-            [self skipToNextForCallback];
-        }
     }
 }
 
@@ -228,14 +240,15 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
 }
 
 
-- (void)pause {
-    if (playingNow) {
-        printf("再生を一時停止します\n");
-        playingNow = NO;
-        AudioOutputUnitStop(audioUnit);
-        
-        if ([self.delegate respondsToSelector:@selector(thisFunctionCallWhenMusicPaused)]) {
-            [self.delegate thisFunctionCallWhenMusicPaused];
+// 連打しても大丈夫。
+- (void)skipToNext {
+    if (canPlay) {
+        if ((playingNow) && !(currentMusicNumber >= playlistLength)) {
+            AudioOutputUnitStop(audioUnit);
+            [self skipToNextForCallback];
+            [self play];
+        } else {
+            [self skipToNextForCallback];
         }
     }
 }

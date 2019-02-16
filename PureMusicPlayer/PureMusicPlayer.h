@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol PMPDelegate <NSObject>
 
 @optional -(void)thisFunctionIsCalledAtBeginningOfMusic;
+@optional -(void)thisFunctionCallWhenPlayingStart;
 @optional -(void)thisFunctionCallWhenMusicPaused;
 @optional -(void)thisFunctionCallWhenMusicStopped;
 
@@ -50,9 +51,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)play;
 -(void)pause;
+-(void)togglePlayPause;
 -(void)stop;
--(void)skipToNext;
 -(void)skipToPrevious;
+-(void)skipToNext;
 
 
 //-(void)setVolumeAtOne;
