@@ -107,6 +107,15 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="w5O-YD-KO8">
                                 <rect key="frame" x="305" y="691" width="51" height="31"/>
                             </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="曲名を隠す" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2eb-Sj-1Mw">
+                                <rect key="frame" x="190" y="54" width="112" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jOy-Ti-tZb">
+                                <rect key="frame" x="310" y="52" width="51" height="31"/>
+                            </switch>
                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4PL-Ti-JHT">
                                 <rect key="frame" x="16" y="602" width="343" height="81"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
@@ -133,6 +142,7 @@
                             <constraint firstItem="0dT-wy-dCm" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="NDN-zM-G7h"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4dJ-QR-uPB" secondAttribute="trailing" constant="16" id="TBa-75-eqV"/>
                             <constraint firstItem="Uok-YW-fx3" firstAttribute="leading" secondItem="nOG-mw-nr9" secondAttribute="trailing" constant="8" id="U6Q-gc-BAT"/>
+                            <constraint firstItem="jOy-Ti-tZb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="UYV-9x-4D3"/>
                             <constraint firstItem="Df5-ab-EXM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="UYq-t5-XYX"/>
                             <constraint firstItem="nOG-mw-nr9" firstAttribute="leading" secondItem="uf1-0D-vRc" secondAttribute="trailing" constant="8" id="WWD-fL-CXB"/>
                             <constraint firstItem="0dT-wy-dCm" firstAttribute="top" secondItem="IDT-6i-NKK" secondAttribute="bottom" constant="8" id="YAH-r9-BOV"/>
@@ -147,9 +157,13 @@
                             <constraint firstItem="bYG-YQ-0uT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="21" id="o0B-mu-Lyk"/>
                             <constraint firstItem="Df5-ab-EXM" firstAttribute="top" secondItem="0dT-wy-dCm" secondAttribute="bottom" constant="8" id="oja-Jz-4oS"/>
                             <constraint firstItem="4PL-Ti-JHT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="qas-80-XPp"/>
+                            <constraint firstItem="2eb-Sj-1Mw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="IDT-6i-NKK" secondAttribute="trailing" constant="8" symbolic="YES" id="rlc-EG-Thb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="VoS-ib-eqb" secondAttribute="trailing" constant="16" id="sk2-61-Bdl"/>
+                            <constraint firstItem="jOy-Ti-tZb" firstAttribute="leading" secondItem="2eb-Sj-1Mw" secondAttribute="trailing" constant="8" id="tgc-Yy-YJ3"/>
                             <constraint firstItem="uf1-0D-vRc" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="tuQ-eC-ay4"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="rVO-3L-crd" secondAttribute="trailing" constant="32" id="ug2-o5-Sgn"/>
+                            <constraint firstItem="2eb-Sj-1Mw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="xsL-as-yz1"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="jOy-Ti-tZb" secondAttribute="trailing" constant="16" id="ylh-Ty-g9L"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -158,6 +172,7 @@
                         <outlet property="albumLabel" destination="4dJ-QR-uPB" id="4Rk-fL-8Rf"/>
                         <outlet property="artistLabel" destination="Df5-ab-EXM" id="Gkg-hu-GQW"/>
                         <outlet property="artworkView" destination="0dT-wy-dCm" id="stK-Yv-7LG"/>
+                        <outlet property="hideOfMetaDataOfControlCenterSwitch" destination="jOy-Ti-tZb" id="mnS-HV-gUQ"/>
                         <outlet property="pauseWhenCurrentMusicFinishedSwitch" destination="w5O-YD-KO8" id="Y7c-44-NPR"/>
                         <outlet property="titleLabel" destination="VoS-ib-eqb" id="HzD-KY-jW1"/>
                         <outlet property="togglePlayPauseButton" destination="Uok-YW-fx3" id="xfs-87-5BZ"/>

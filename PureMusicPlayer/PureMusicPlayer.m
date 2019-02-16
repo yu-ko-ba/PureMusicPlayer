@@ -38,12 +38,11 @@ NSUInteger playlistLength;
         self.pauseWhenCurrentMusicFinishedIsEnable = NO;
         [self pause];
     }
+    
     if (currentMusicNumber >= playlistLength) {
         [self pause];
         self.currentMusicNumber = 0;
         [self prepareToPlay:playlist[currentMusicNumber]];
-        
-        //        [self stop];
     } else {
         currentMusicNumber++;
         [self prepareToPlay:playlist[currentMusicNumber]];

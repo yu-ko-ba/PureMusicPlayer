@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var albumLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var pauseWhenCurrentMusicFinishedSwitch: UISwitch!
+    @IBOutlet weak var hideOfMetaDataOfControlCenterSwitch: UISwitch!
     @IBOutlet weak var togglePlayPauseButton: UIButton!
     
     @IBOutlet weak var Re_initAudioUnitButton: UIButton!
@@ -34,9 +35,11 @@ class ViewController: UIViewController {
             self.artistLabel.text = self.player.currentArtist
             self.albumLabel.text = self.player.currentAlbumTitle
             self.titleLabel.text = self.player.currentTitle
+            
+            if !self.hideOfMetaDataOfControlCenterSwitch.isOn {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: self.player.currentArtist, MPMediaItemPropertyAlbumTitle: self.player.currentAlbumTitle, MPMediaItemPropertyTitle: self.player.currentTitle]
+            }
         }
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: player.currentArtist, MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle, MPMediaItemPropertyTitle: player.currentTitle]
     }
     
     
@@ -63,12 +66,24 @@ class ViewController: UIViewController {
     }
     
     
+    @objc func thisFunctionCallWhenHideOfMetaDataOfControlCenterSwitchPushed(sender: UISwitch) {
+        if sender.isOn {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: "Artist", MPMediaItemPropertyAlbumTitle: "Album", MPMediaItemPropertyTitle: "Title"]
+        } else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: player.currentArtist, MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle, MPMediaItemPropertyTitle: player.currentTitle]
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         artworkView.image = defaultArtwork
+        
         pauseWhenCurrentMusicFinishedSwitch.addTarget(self, action: #selector(thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
+        
+        hideOfMetaDataOfControlCenterSwitch.addTarget(self, action: #selector(thisFunctionCallWhenHideOfMetaDataOfControlCenterSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
         
         artistLabel.adjustsFontSizeToFitWidth = true
         albumLabel.adjustsFontSizeToFitWidth = true
@@ -117,13 +132,6 @@ class ViewController: UIViewController {
     
     @IBAction func togglePlayPauseButtonPushed(_ sender: UIButton) {
         player.togglePlayPause()
-        
-//        if player.playingNow {
-//            player.pause()
-//        } else if player.canPlay {
-//            player.play()
-//        }
-//        togglePlayPauseButtonSetCurrentStatus()
     }
     
     
