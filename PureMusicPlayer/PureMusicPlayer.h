@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) BOOL canPlay;
 @property (readonly) BOOL playingNow;
 
+@property int currentMusicNumber;
+
 @property BOOL pauseWhenCurrentMusicFinishedIsEnable;
 
 -(void)skipToNextForCallback;

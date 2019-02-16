@@ -17,9 +17,41 @@ class ViewController: UIViewController {
     @IBOutlet weak var pauseWhenCurrentMusicFinishedSwitch: UISwitch!
     @IBOutlet weak var togglePlayPauseButton: UIButton!
     
+    @IBOutlet weak var Re_initAudioUnitButton: UIButton!
+    
     let defaultArtwork: UIImage = #imageLiteral(resourceName: "default.png")
     
     let player: PureMusicPlayer = PureMusicPlayer.init()
+    
+    
+    func showMetaData() {
+        DispatchQueue.main.async {
+            if let artwork = self.player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) {
+                self.artworkView.image = artwork
+            }
+            self.artistLabel.text = self.player.currentArtist
+            self.albumLabel.text = self.player.currentAlbumTitle
+            self.titleLabel.text = self.player.currentTitle
+        }
+    }
+    
+    
+    func togglePlayPauseButtonSetCurrentStatus() {
+        DispatchQueue.main.async {
+            if self.player.playingNow {
+                self.togglePlayPauseButton.setTitle("‖", for: UIControl.State())
+            } else {
+                self.togglePlayPauseButton.setTitle("▶︎", for: UIControl.State())
+            }
+        }
+    }
+    
+    
+    func pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus() {
+        DispatchQueue.main.async {
+            self.pauseWhenCurrentMusicFinishedSwitch.setOn(self.player.pauseWhenCurrentMusicFinishedIsEnable, animated: true)
+        }
+    }
     
     
     @objc func thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender: UISwitch) {
@@ -32,12 +64,13 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         artworkView.image = defaultArtwork
-        pauseWhenCurrentMusicFinishedSwitch.isOn = false
         pauseWhenCurrentMusicFinishedSwitch.addTarget(self, action: #selector(thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
         
         artistLabel.adjustsFontSizeToFitWidth = true
         albumLabel.adjustsFontSizeToFitWidth = true
         titleLabel.adjustsFontSizeToFitWidth = true
+        
+        Re_initAudioUnitButton.titleLabel?.numberOfLines = 2
         
         player.delegate = self
     }
@@ -54,18 +87,20 @@ class ViewController: UIViewController {
     @IBAction func togglePlayPauseButtonPushed(_ sender: UIButton) {
         if player.playingNow {
             player.pause()
-            
-            // ほんとうはいらないはずなんだけどうまく動かないときがあるからそのとき用
-            togglePlayPauseButton.setTitle("▶︎", for: UIControl.State())
         } else if player.canPlay {
             player.play()
-            togglePlayPauseButton.setTitle("‖", for: UIControl.State())
         }
+        togglePlayPauseButtonSetCurrentStatus()
     }
     
     
     @IBAction func stopButtonPushed(_ sender: UIButton) {
         player.stop()
+        
+        artworkView.image = defaultArtwork
+        artistLabel.text = "Artist"
+        albumLabel.text = "Album"
+        titleLabel.text = "Title"
     }
     
     
@@ -76,6 +111,11 @@ class ViewController: UIViewController {
     
     @IBAction func skipToNextButtonPushed(_ sender: UIButton) {
         player.skipToNext()
+    }
+    
+    
+    @IBAction func re_initAudioUnitButtonPushed(_ sender: UIButton) {
+        player.reInitAudioUnit()
     }
     
 }
@@ -91,7 +131,7 @@ extension ViewController: MPMediaPickerControllerDelegate {
         player.setPlaylist(mediaItemCollection)
         player.play()
         
-        togglePlayPauseButton.setTitle("‖", for: UIControl.State())
+        togglePlayPauseButtonSetCurrentStatus()
     }
     
     
@@ -103,28 +143,18 @@ extension ViewController: MPMediaPickerControllerDelegate {
 
 extension ViewController: PMPDelegate {
     func thisFunctionIsCalledAtBeginningOfMusic() {
-        if let artwork = player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) {
-            artworkView.image = artwork
-        }
-        
-        artistLabel.text = player.currentArtist
-        albumLabel.text = player.currentAlbumTitle
-        titleLabel.text = player.currentTitle
+        showMetaData()
     }
     
     
     func thisFunctionCallWhenMusicPaused() {
-        togglePlayPauseButton.setTitle("▶︎", for: UIControl.State())
-        
-        pauseWhenCurrentMusicFinishedSwitch.isOn = player.pauseWhenCurrentMusicFinishedIsEnable
+        togglePlayPauseButtonSetCurrentStatus()
+        pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus()
     }
     
     
     func thisFunctionCallWhenMusicStopped() {
-        togglePlayPauseButton.setTitle("▶︎", for: UIControl.State())
-        artworkView.image = defaultArtwork
-        artistLabel.text = "Artist"
-        albumLabel.text = "Album"
-        titleLabel.text = "Title"
+        togglePlayPauseButtonSetCurrentStatus()
+        pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus()
     }
 }

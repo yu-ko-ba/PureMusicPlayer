@@ -49,7 +49,7 @@
 		71A9BB1C221695B3001064FD /* PureMusicPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PureMusicPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71A9BB20221695B3001064FD /* PureMusicPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PureMusicPlayerUITests.swift; sourceTree = "<group>"; };
 		71A9BB22221695B3001064FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PureMusicPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
+		71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PureMusicPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		71F032D6221696F10019D20B /* PureMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureMusicPlayer.h; sourceTree = "<group>"; };
 		71F032D7221696F10019D20B /* PureMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PureMusicPlayer.m; sourceTree = "<group>"; };
 		71F032D92216A2020019D20B /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
@@ -103,16 +103,16 @@
 		71A9BAFF221695B1001064FD /* PureMusicPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				71F032D92216A2020019D20B /* default.png */,
+				71A9BB00221695B1001064FD /* AppDelegate.swift */,
 				71F032D6221696F10019D20B /* PureMusicPlayer.h */,
 				71F032D7221696F10019D20B /* PureMusicPlayer.m */,
-				71A9BB00221695B1001064FD /* AppDelegate.swift */,
 				71A9BB02221695B1001064FD /* ViewController.swift */,
 				71A9BB04221695B1001064FD /* Main.storyboard */,
 				71A9BB07221695B3001064FD /* Assets.xcassets */,
 				71A9BB09221695B3001064FD /* LaunchScreen.storyboard */,
 				71A9BB0C221695B3001064FD /* Info.plist */,
 				71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */,
+				71F032D92216A2020019D20B /* default.png */,
 			);
 			path = PureMusicPlayer;
 			sourceTree = "<group>";

@@ -21,12 +21,15 @@
 @synthesize canPlay;
 @synthesize playingNow;
 
+@synthesize currentMusicNumber;
+
 @synthesize pauseWhenCurrentMusicFinishedIsEnable;
+
+AudioStreamBasicDescription clientDataFormat;
 
 NSArray<MPMediaItem *> *playlist;
 
 NSUInteger playlistLength;
-int currentMusicNumber;
 
 
 // プレイリストの最後だったら再生を停止する、そうじゃなかったら次の曲にスキップする ※連打するとバグる(*´∀｀*)
@@ -36,7 +39,11 @@ int currentMusicNumber;
         [self pause];
     }
     if (currentMusicNumber >= playlistLength) {
-        [self stop];
+        [self pause];
+        self.currentMusicNumber = 0;
+        [self prepareToPlay:playlist[currentMusicNumber]];
+        
+        //        [self stop];
     } else {
         currentMusicNumber++;
         [self prepareToPlay:playlist[currentMusicNumber]];
@@ -97,7 +104,6 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
     
     ExtAudioFileGetProperty(extAudioFile, kExtAudioFileProperty_FileDataFormat, &sizeOfAudioStreamBasicDescription, &inFileDataFormat);
     
-    AudioStreamBasicDescription clientDataFormat;
     clientDataFormat.mSampleRate = inFileDataFormat.mSampleRate;
     clientDataFormat.mChannelsPerFrame = inFileDataFormat.mChannelsPerFrame;
     clientDataFormat.mFormatID = kAudioFormatLinearPCM;
@@ -128,12 +134,16 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
 
 
 - (void)reInitAudioUnit {
-    if (!playingNow) {
-        AudioOutputUnitStop(audioUnit);
-        AudioUnitUninitialize(audioUnit);
-        AudioComponentInstanceDispose(audioUnit);
-        
-        [self initAudioUnit];
+    AudioOutputUnitStop(audioUnit);
+    AudioUnitUninitialize(audioUnit);
+    AudioComponentInstanceDispose(audioUnit);
+    
+    [self initAudioUnit];
+    
+    AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &clientDataFormat, sizeof(clientDataFormat));
+    
+    if (playingNow) {
+        AudioOutputUnitStart(audioUnit);
     }
 }
 
@@ -159,53 +169,61 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
 
 
 - (void)stop {
-    if (playingNow) {
+    if (canPlay) {
         printf("再生を終了します\n");
-        playingNow = NO;
-        canPlay = NO;
-        pauseWhenCurrentMusicFinishedIsEnable = NO;
-        
-        AudioOutputUnitStop(audioUnit);
-        
-        if ([self.delegate respondsToSelector:@selector(thisFunctionCallWhenMusicStopped)]) {
-            [self.delegate thisFunctionCallWhenMusicStopped];
-        }
+    }
+    playingNow = NO;
+    canPlay = NO;
+    pauseWhenCurrentMusicFinishedIsEnable = NO;
+    
+    AudioOutputUnitStop(audioUnit);
+    
+    if ([self.delegate respondsToSelector:@selector(thisFunctionCallWhenMusicStopped)]) {
+        [self.delegate thisFunctionCallWhenMusicStopped];
     }
 }
 
 
 // 連打しても大丈夫。
 - (void)skipToNext {
-    if ((playingNow) && !(currentMusicNumber >= playlistLength)) {
-        [self stop];
-        [self skipToNextForCallback];
-        [self play];
-    } else {
-        [self skipToNextForCallback];
+    if (canPlay) {
+        if ((playingNow) && !(currentMusicNumber >= playlistLength)) {
+            AudioOutputUnitStop(audioUnit);
+            [self skipToNextForCallback];
+            [self play];
+        } else {
+            [self skipToNextForCallback];
+        }
     }
 }
 
 
 - (void)skipToPrevious {
-    if (playingNow) {
-        SInt64 currentSeek;
-        ExtAudioFileTell(extAudioFile, &currentSeek);
-        
-        if (currentSeek > 30000) {
-            ExtAudioFileSeek(extAudioFile, 0);
-        } else if (currentMusicNumber >= 1){
-            [self stop];
+    if (canPlay) {
+        if (playingNow) {
+            SInt64 currentSeek;
+            ExtAudioFileTell(extAudioFile, &currentSeek);
+            
+            if (currentSeek > 30000) {
+                ExtAudioFileSeek(extAudioFile, 0);
+            } else if (currentMusicNumber >= 1){
+                AudioOutputUnitStop(audioUnit);
+                currentMusicNumber--;
+                [self prepareToPlay:playlist[currentMusicNumber]];
+                [self play];
+            } else {
+                [self pause];
+                ExtAudioFileSeek(extAudioFile, 0);
+            }
+            
+            printf("%lld\n", currentSeek);
+        } else if (currentMusicNumber >= 1) {
             currentMusicNumber--;
             [self prepareToPlay:playlist[currentMusicNumber]];
-            [self play];
         } else {
-            printf("再生を停止します\n");
-            AudioOutputUnitStop(audioUnit);
-            playingNow = NO;
             ExtAudioFileSeek(extAudioFile, 0);
         }
-        
-        printf("%lld\n", currentSeek);
+
     }
 }
 
