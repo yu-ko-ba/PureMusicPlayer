@@ -81,8 +81,10 @@ class ViewController: UIViewController {
         
         artworkView.image = defaultArtwork
         
+        pauseWhenCurrentMusicFinishedSwitch.onTintColor = UIColor.black
         pauseWhenCurrentMusicFinishedSwitch.addTarget(self, action: #selector(thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
         
+        hideOfMetaDataOfControlCenterSwitch.onTintColor = UIColor.black
         hideOfMetaDataOfControlCenterSwitch.addTarget(self, action: #selector(thisFunctionCallWhenHideOfMetaDataOfControlCenterSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
         
         artistLabel.adjustsFontSizeToFitWidth = true

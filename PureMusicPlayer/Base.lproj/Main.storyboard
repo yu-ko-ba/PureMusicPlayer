@@ -21,7 +21,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IDT-6i-NKK">
                                 <rect key="frame" x="16" y="44" width="90" height="46"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <state key="normal" title="Browse"/>
+                                <state key="normal" title="Browse">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="browseButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SMl-DG-Idn"/>
                                 </connections>
@@ -57,7 +59,9 @@
                                     <constraint firstAttribute="width" constant="48" id="n78-Np-3ZD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="48"/>
-                                <state key="normal" title="▶︎"/>
+                                <state key="normal" title="▶︎">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="togglePlayPauseButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="V80-iv-gkv"/>
                                 </connections>
@@ -69,7 +73,9 @@
                                     <constraint firstAttribute="height" constant="48" id="apd-xT-ENH"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="48"/>
-                                <state key="normal" title="■"/>
+                                <state key="normal" title="■">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="stopButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5UL-Uk-WXF"/>
                                 </connections>
@@ -81,7 +87,9 @@
                                     <constraint firstAttribute="height" constant="48" id="wG3-OA-uAs"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="48"/>
-                                <state key="normal" title="◀︎◀︎"/>
+                                <state key="normal" title="◀︎◀︎">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="skipToPreviousButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sFF-0y-S17"/>
                                 </connections>
@@ -93,7 +101,9 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="tEE-a4-pPg"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="48"/>
-                                <state key="normal" title="▶︎▶︎"/>
+                                <state key="normal" title="▶︎▶︎">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="skipToNextButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DOu-zX-0ol"/>
                                 </connections>
@@ -119,7 +129,9 @@
                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4PL-Ti-JHT">
                                 <rect key="frame" x="16" y="602" width="343" height="81"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <state key="normal" title="ジジジって音が混ざりだしたら押すボタン"/>
+                                <state key="normal" title="ジジジって音が混ざりだしたら押すボタン">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="re_initAudioUnitButtonPushed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ejj-CJ-5vY"/>
                                 </connections>
