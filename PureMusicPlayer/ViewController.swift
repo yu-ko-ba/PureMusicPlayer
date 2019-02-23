@@ -9,202 +9,190 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
-    @IBOutlet weak var artworkView: UIImageView!
-    @IBOutlet weak var artistLabel: UILabel!
-    @IBOutlet weak var albumLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var pauseWhenCurrentMusicFinishedSwitch: UISwitch!
-    @IBOutlet weak var hideOfMetaDataOfControlCenterSwitch: UISwitch!
-    @IBOutlet weak var togglePlayPauseButton: UIButton!
-    
-    @IBOutlet weak var Re_initAudioUnitButton: UIButton!
-    
-    let defaultArtwork: UIImage = #imageLiteral(resourceName: "default.png")
-    
-    let player: PureMusicPlayer = PureMusicPlayer.init()
-    
-    
-    func showMetaData() {
-        DispatchQueue.main.async {
-            if let artwork = self.player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) {
-                self.artworkView.image = artwork
-            } else {
-                self.artworkView.image = self.defaultArtwork
-            }
-            self.artistLabel.text = self.player.currentArtist
-            self.albumLabel.text = self.player.currentAlbumTitle
-            self.titleLabel.text = self.player.currentTitle
-            
-            if !self.hideOfMetaDataOfControlCenterSwitch.isOn {
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: self.player.currentArtist, MPMediaItemPropertyAlbumTitle: self.player.currentAlbumTitle, MPMediaItemPropertyTitle: self.player.currentTitle]
-            }
-        }
-    }
-    
-    
-    func togglePlayPauseButtonSetCurrentStatus() {
-        DispatchQueue.main.async {
-            if self.player.playingNow {
-                self.togglePlayPauseButton.setTitle("‖", for: UIControl.State())
-            } else {
-                self.togglePlayPauseButton.setTitle("▶︎", for: UIControl.State())
-            }
-        }
-    }
-    
-    
-    func pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus() {
-        DispatchQueue.main.async {
-            self.pauseWhenCurrentMusicFinishedSwitch.setOn(self.player.pauseWhenCurrentMusicFinishedIsEnable, animated: true)
-        }
-    }
-    
-    
-    @objc func thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender: UISwitch) {
-        player.pauseWhenCurrentMusicFinishedIsEnable = sender.isOn
-    }
-    
-    
-    @objc func thisFunctionCallWhenHideOfMetaDataOfControlCenterSwitchPushed(sender: UISwitch) {
-        if sender.isOn {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: "Artist", MPMediaItemPropertyAlbumTitle: "Album", MPMediaItemPropertyTitle: "Title"]
-        } else {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: player.currentArtist, MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle, MPMediaItemPropertyTitle: player.currentTitle]
-        }
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
+  
+  @IBOutlet weak var artworkView: UIImageView!
+  @IBOutlet weak var artistLabel: UILabel!
+  @IBOutlet weak var albumLabel: UILabel!
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var pauseWhenCurrentMusicFinishedSwitch: UISwitch!
+  @IBOutlet weak var hideOfMetaDataSwitch: UISwitch!
+  @IBOutlet weak var togglePlayPauseButton: UIButton!
+  
+  @IBOutlet weak var Re_initAudioUnitButton: UIButton!
+  
+  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  
+  
+  func showMetaData() {
+    if UserDefaults.standard.bool(forKey: "hideMetaDataIsEnable") { // "曲名を隠す"がONだったら
+      if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // デフォルトのアートワークを用意できたら、
         artworkView.image = defaultArtwork
         
-        pauseWhenCurrentMusicFinishedSwitch.onTintColor = UIColor.black
-        pauseWhenCurrentMusicFinishedSwitch.addTarget(self, action: #selector(thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+          MPMediaItemPropertyArtwork: MPMediaItemArtwork.init(boundsSize: defaultArtwork.size, requestHandler: { (size) -> UIImage in
+            return defaultArtwork
+          }),
+          MPMediaItemPropertyArtist: "Artist",
+          MPMediaItemPropertyAlbumTitle: "Album",
+          MPMediaItemPropertyTitle: "Title"]
         
-        hideOfMetaDataOfControlCenterSwitch.onTintColor = UIColor.black
-        hideOfMetaDataOfControlCenterSwitch.addTarget(self, action: #selector(thisFunctionCallWhenHideOfMetaDataOfControlCenterSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
+      } else { // デフォルトのアートワークを用意できなかったら、
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+          MPMediaItemPropertyArtist: "Artist",
+          MPMediaItemPropertyAlbumTitle: "Album",
+          MPMediaItemPropertyTitle: "Title"]
+      }
+      
+      artistLabel.text = "Artist"
+      albumLabel.text = "Album"
+      titleLabel.text = "Title"
+      
+    } else if player.canPlay { // "曲名を隠す"がOFFで、プレーヤーの準備ができていたら、
+      if let artwork: UIImage = player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) { // playerのcurrentArtworkをUIImage型に変換できたら、
+        artworkView.image = artwork
         
-        artistLabel.adjustsFontSizeToFitWidth = true
-        albumLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.adjustsFontSizeToFitWidth = true
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+          MPMediaItemPropertyArtwork: player.currentArtwork,
+          MPMediaItemPropertyArtist: player.currentArtist,
+          MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
+          MPMediaItemPropertyTitle: player.currentTitle]
         
-        Re_initAudioUnitButton.titleLabel?.numberOfLines = 2
+      } else if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // playerのcurrentArtworkをUIImage型に変換出来なくてかつ、デフォルトのアートワークを用意できたら、
+        artworkView.image = defaultArtwork
         
-        player.delegate = self
-        
-        // コントロールセンターの設定
-        let commandCenter: MPRemoteCommandCenter = MPRemoteCommandCenter.shared()
-        commandCenter.playCommand.addTarget { (event) in
-            self.player.play()
-            return MPRemoteCommandHandlerStatus.success
-        }
-        commandCenter.pauseCommand.addTarget { (event) in
-            self.player.pause()
-            return MPRemoteCommandHandlerStatus.success
-        }
-        commandCenter.togglePlayPauseCommand.addTarget { (event) in
-            self.player.togglePlayPause()
-            return MPRemoteCommandHandlerStatus.success
-        }
-        commandCenter.stopCommand.addTarget { (event) in
-            self.player.stop()
-            return MPRemoteCommandHandlerStatus.success
-        }
-        commandCenter.previousTrackCommand.addTarget { (event) in
-            self.player.skipToPrevious()
-            return MPRemoteCommandHandlerStatus.success
-        }
-        commandCenter.nextTrackCommand.addTarget { (event) in
-            self.player.skipToNext()
-            return MPRemoteCommandHandlerStatus.success
-        }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+          MPMediaItemPropertyArtwork: MPMediaItemArtwork.init(boundsSize: defaultArtwork.size, requestHandler: { (size) -> UIImage in
+            return defaultArtwork
+          }),
+          MPMediaItemPropertyArtist: player.currentArtist,
+          MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
+          MPMediaItemPropertyTitle: player.currentTitle]
+      } else { // 上のどれも出来なかったら、
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+          MPMediaItemPropertyArtist: player.currentArtist,
+          MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
+          MPMediaItemPropertyTitle: player.currentTitle]
+      }
+      
+      artistLabel.text = player.currentArtist
+      albumLabel.text = player.currentAlbumTitle
+      titleLabel.text = player.currentTitle
     }
-    
-
-    @IBAction func browseButtonPushed(_ sender: UIButton) {
-        let picker: MPMediaPickerController = MPMediaPickerController()
-        picker.delegate = self
-        picker.allowsPickingMultipleItems = true
-        present(picker, animated: true, completion: nil)
+  }
+  
+  
+  func togglePlayPauseButtonSetCurrentStatus() {
+    DispatchQueue.main.async {
+      if self.player.playingNow {
+        self.togglePlayPauseButton.setTitle("‖", for: UIControl.State())
+      } else {
+        self.togglePlayPauseButton.setTitle("▶︎", for: UIControl.State())
+      }
     }
+  }
+  
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any additional setup after loading the view, typically from a nib.
     
+    // アーティスト名、アルバム名、タイトル名のそれぞれのラベルのフォントサイズを、枠に収まりきるようにする。
+    artistLabel.adjustsFontSizeToFitWidth = true
+    albumLabel.adjustsFontSizeToFitWidth = true
+    titleLabel.adjustsFontSizeToFitWidth = true
     
-    @IBAction func togglePlayPauseButtonPushed(_ sender: UIButton) {
-        player.togglePlayPause()
-    }
+    // PureMusicPlayerDelegateからの操作を受け付けるようにする。
+    player.delegate = self
     
-    
-    @IBAction func stopButtonPushed(_ sender: UIButton) {
-        player.stop()
-    }
-    
-    
-    @IBAction func skipToPreviousButtonPushed(_ sender: UIButton) {
-        player.skipToPrevious()
-    }
-    
-    
-    @IBAction func skipToNextButtonPushed(_ sender: UIButton) {
-        player.skipToNext()
-    }
-    
-    
-    @IBAction func re_initAudioUnitButtonPushed(_ sender: UIButton) {
-        player.reInitAudioUnit()
-    }
-    
+    showMetaData()
+    togglePlayPauseButtonSetCurrentStatus()
+  }
+  
+  
+  @IBAction func chooseButtonPushed(_ sender: UIButton) {
+    let picker: MPMediaPickerController = MPMediaPickerController()
+    picker.delegate = self
+    picker.allowsPickingMultipleItems = true
+    present(picker, animated: true, completion: nil)
+  }
+  
+  
+  @IBAction func togglePlayPauseButtonPushed(_ sender: UIButton) {
+    player.togglePlayPause()
+  }
+  
+  
+  @IBAction func stopButtonPushed(_ sender: UIButton) {
+    player.stop()
+  }
+  
+  
+  @IBAction func skipToPreviousButtonPushed(_ sender: UIButton) {
+    player.skipToPrevious()
+  }
+  
+  
+  @IBAction func skipToNextButtonPushed(_ sender: UIButton) {
+    player.skipToNext()
+  }
+  
+  
+  @IBAction func re_initAudioUnitButtonPushed(_ sender: UIButton) {
+    player.reInitAudioUnit()
+  }
+  
 }
 
 
 extension ViewController: MPMediaPickerControllerDelegate {
-    func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
-        defer {
-            // 関数を抜けるときに実行されるらしい
-            dismiss(animated: true, completion: nil)
-        }
-        
-        player.setPlaylist(mediaItemCollection)
-        player.play()
-        
-        togglePlayPauseButtonSetCurrentStatus()
+  func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
+    defer {
+      // 関数を抜けるときに実行されるらしい
+      dismiss(animated: true, completion: nil)
     }
     
+    player.setPlaylist(mediaItemCollection)
+    player.play()
     
-    func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
-        dismiss(animated: true, completion: nil)
-    }
+    togglePlayPauseButtonSetCurrentStatus()
+  }
+  
+  
+  func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
+    dismiss(animated: true, completion: nil)
+  }
 }
 
 
-extension ViewController: PMPDelegate {
-    func thisFunctionIsCalledAtBeginningOfMusic() {
-        showMetaData()
+extension ViewController: PureMusicPlayerDelegate {
+  func thisFunctionIsCalledAtBeginningOfMusic() {
+    DispatchQueue.main.async {
+      self.showMetaData()
     }
+  }
+  
+  
+  // 曲の先頭での処理。
+  func thisFunctionCallWhenPlayingStart() {
+    togglePlayPauseButtonSetCurrentStatus()
+  }
+  
+  
+  // 再生が一時停止されたときの処理。
+  func thisFunctionCallWhenMusicPaused() {
+    togglePlayPauseButtonSetCurrentStatus()
+  }
+  
+  
+  // 再生が停止されたときの処理。
+  func thisFunctionCallWhenMusicStopped() {
+    togglePlayPauseButtonSetCurrentStatus()
     
-    
-    func thisFunctionCallWhenPlayingStart() {
-        togglePlayPauseButtonSetCurrentStatus()
+    if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") {
+      artworkView.image = defaultArtwork
     }
-    
-    
-    func thisFunctionCallWhenMusicPaused() {
-        togglePlayPauseButtonSetCurrentStatus()
-        pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus()
-    }
-    
-    
-    func thisFunctionCallWhenMusicStopped() {
-        togglePlayPauseButtonSetCurrentStatus()
-        pauseWhenCurrentMusicFinishedSwitchSetCurrentStatus()
-        
-        artworkView.image = defaultArtwork
-        artistLabel.text = "Artist"
-        albumLabel.text = "Album"
-        titleLabel.text = "Title"
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyArtist: "Artist", MPMediaItemPropertyAlbumTitle: "Album", MPMediaItemPropertyTitle: "Title"]
-    }
+    artistLabel.text = "Artist"
+    albumLabel.text = "Album"
+    titleLabel.text = "Title"
+  }
 }

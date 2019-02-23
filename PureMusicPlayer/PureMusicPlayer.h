@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class PureMusicPlayer;
 
-@protocol PMPDelegate <NSObject>
+@protocol PureMusicPlayerDelegate <NSObject>
 
 @optional -(void)thisFunctionIsCalledAtBeginningOfMusic;
 @optional -(void)thisFunctionCallWhenPlayingStart;
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PureMusicPlayer : NSObject
 
-@property (nonatomic, weak) id<PMPDelegate> delegate;
+@property (nonatomic, weak) id<PureMusicPlayerDelegate> delegate;
 
 @property ExtAudioFileRef extAudioFile;
 @property AudioUnit audioUnit;
@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 //-(void)setVolumeAtOne;
 //-(void)setVolumeAtZero;
 
++ (PureMusicPlayer *)sharedManager;
 @end
 
 NS_ASSUME_NONNULL_END

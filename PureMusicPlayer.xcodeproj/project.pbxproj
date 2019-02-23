@@ -14,8 +14,8 @@
 		71A9BB0B221695B3001064FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71A9BB09221695B3001064FD /* LaunchScreen.storyboard */; };
 		71A9BB16221695B3001064FD /* PureMusicPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A9BB15221695B3001064FD /* PureMusicPlayerTests.swift */; };
 		71A9BB21221695B3001064FD /* PureMusicPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A9BB20221695B3001064FD /* PureMusicPlayerUITests.swift */; };
+		71AF815A2220FC5500AD7363 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AF81592220FC5500AD7363 /* OptionsViewController.swift */; };
 		71F032D8221696F10019D20B /* PureMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71F032D7221696F10019D20B /* PureMusicPlayer.m */; };
-		71F032DA2216A2020019D20B /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 71F032D92216A2020019D20B /* default.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +37,8 @@
 
 /* Begin PBXFileReference section */
 		71A9BAFD221695B1001064FD /* PureMusicPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PureMusicPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		71A9BB00221695B1001064FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		71A9BB02221695B1001064FD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		71A9BB00221695B1001064FD /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		71A9BB02221695B1001064FD /* ViewController.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		71A9BB05221695B1001064FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		71A9BB07221695B3001064FD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		71A9BB0A221695B3001064FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,10 +49,10 @@
 		71A9BB1C221695B3001064FD /* PureMusicPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PureMusicPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71A9BB20221695B3001064FD /* PureMusicPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PureMusicPlayerUITests.swift; sourceTree = "<group>"; };
 		71A9BB22221695B3001064FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		71AF81592220FC5500AD7363 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PureMusicPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		71F032D6221696F10019D20B /* PureMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureMusicPlayer.h; sourceTree = "<group>"; };
-		71F032D7221696F10019D20B /* PureMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PureMusicPlayer.m; sourceTree = "<group>"; };
-		71F032D92216A2020019D20B /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
+		71F032D7221696F10019D20B /* PureMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = PureMusicPlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +88,7 @@
 				71A9BB1F221695B3001064FD /* PureMusicPlayerUITests */,
 				71A9BAFE221695B1001064FD /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
 		};
 		71A9BAFE221695B1001064FD /* Products */ = {
@@ -107,12 +108,12 @@
 				71F032D6221696F10019D20B /* PureMusicPlayer.h */,
 				71F032D7221696F10019D20B /* PureMusicPlayer.m */,
 				71A9BB02221695B1001064FD /* ViewController.swift */,
+				71AF81592220FC5500AD7363 /* OptionsViewController.swift */,
 				71A9BB04221695B1001064FD /* Main.storyboard */,
 				71A9BB07221695B3001064FD /* Assets.xcassets */,
 				71A9BB09221695B3001064FD /* LaunchScreen.storyboard */,
 				71A9BB0C221695B3001064FD /* Info.plist */,
 				71F032D5221696F00019D20B /* PureMusicPlayer-Bridging-Header.h */,
-				71F032D92216A2020019D20B /* default.png */,
 			);
 			path = PureMusicPlayer;
 			sourceTree = "<group>";
@@ -248,7 +249,6 @@
 				71A9BB0B221695B3001064FD /* LaunchScreen.storyboard in Resources */,
 				71A9BB08221695B3001064FD /* Assets.xcassets in Resources */,
 				71A9BB06221695B1001064FD /* Main.storyboard in Resources */,
-				71F032DA2216A2020019D20B /* default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				71A9BB03221695B1001064FD /* ViewController.swift in Sources */,
+				71AF815A2220FC5500AD7363 /* OptionsViewController.swift in Sources */,
 				71F032D8221696F10019D20B /* PureMusicPlayer.m in Sources */,
 				71A9BB01221695B1001064FD /* AppDelegate.swift in Sources */,
 			);
