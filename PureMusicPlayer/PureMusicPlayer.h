@@ -42,7 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL pauseWhenCurrentMusicFinishedIsEnable;
 
 -(void)skipToNextForCallback;
+
 -(void)initAudioUnit;
+
+-(void)showMusicDataForInfoCenter;
+
 -(void)prepareToPlay:(MPMediaItem*)inURL;
 
 -(void)reInitAudioUnit;

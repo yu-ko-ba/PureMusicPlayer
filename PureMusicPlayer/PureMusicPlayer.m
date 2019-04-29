@@ -89,18 +89,42 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
   callbackStruct.inputProcRefCon = (__bridge void * _Nullable)(self);
   
   AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &callbackStruct, sizeof(AURenderCallbackStruct));
+}
+
+
+- (void)showMusicDataForInfoCenter {
+  // コントロールセンターに曲情報を表示する
+  MPNowPlayingInfoCenter *infoCenter = MPNowPlayingInfoCenter.defaultCenter;
+  NSMutableDictionary *musicInfo = [[NSMutableDictionary alloc] init];
+  UIImage *defaultArtworkImage = [UIImage imageNamed:@"defaultArtwork"];
   
-  // オーディオセッションを"Playback"に設定して、バックグラウンド再生できるようにする
-  AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-  [audioSession setCategory:AVAudioSessionCategoryPlayback error:NULL];
-  [audioSession setActive:YES error:NULL];
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:@"hideMetaDataIsEnable"]) {
+    if (defaultArtworkImage != nil) {
+      MPMediaItemArtwork *defaultArtwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:defaultArtworkImage.size requestHandler:^UIImage * _Nonnull(CGSize size) {
+        return defaultArtworkImage;
+      }];
+      [musicInfo setObject:defaultArtwork forKey:MPMediaItemPropertyArtwork];
+    }
+    [musicInfo setObject:@"Artist" forKey:MPMediaItemPropertyArtist];
+    [musicInfo setObject:@"Album" forKey:MPMediaItemPropertyAlbumTitle];
+    [musicInfo setObject:@"Title" forKey:MPMediaItemPropertyTitle];
+  } else {
+    [musicInfo setObject:currentArtwork forKey:MPMediaItemPropertyArtwork];
+    [musicInfo setObject:currentArtist forKey:MPMediaItemPropertyArtist];
+    [musicInfo setObject:currentAlbumTitle forKey:MPMediaItemPropertyAlbumTitle];
+    [musicInfo setObject:currentTitle forKey:MPMediaItemPropertyTitle];
+  }
+  
+  [infoCenter setNowPlayingInfo:musicInfo];
 }
 
 
 // 再生の準備をする
 - (void)prepareToPlay:(MPMediaItem*)inItem {
+  // 再生する曲のassetURLをextAudioFileに開く
   OSStatus resultOfOpenURL = ExtAudioFileOpenURL((__bridge CFURLRef _Nonnull)(inItem.assetURL), &extAudioFile);
   
+  // assetURLを開くのに失敗したら、returnする
   if (resultOfOpenURL != noErr) {
     fprintf(stderr, "\"ExtAudioFileOpenURL\"でエラーが起こりました。");
     canPlay = NO;
@@ -110,8 +134,10 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
   AudioStreamBasicDescription inFileDataFormat;
   UInt32 sizeOfAudioStreamBasicDescription = sizeof(AudioStreamBasicDescription);
   
+  // extAudioFileに入っているデータのフォーマットをinFileDataFormatに記録する
   ExtAudioFileGetProperty(extAudioFile, kExtAudioFileProperty_FileDataFormat, &sizeOfAudioStreamBasicDescription, &inFileDataFormat);
   
+  // 出力するデータのフォーマットを、inFileDataFormatを元に、LinearPCM形式にする
   clientDataFormat.mSampleRate = inFileDataFormat.mSampleRate;
   clientDataFormat.mChannelsPerFrame = inFileDataFormat.mChannelsPerFrame;
   clientDataFormat.mFormatID = kAudioFormatLinearPCM;
@@ -122,19 +148,26 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
   clientDataFormat.mFramesPerPacket = 1;
   clientDataFormat.mReserved = 0;
   
+  // extAudioFileの出力するときのフォーマットをclientDataFormatに記録されたものにする
   ExtAudioFileSetProperty(extAudioFile, kExtAudioFileProperty_ClientDataFormat, sizeOfAudioStreamBasicDescription, &clientDataFormat);
   
+  // audioUnitの再生フォーマットをclientDataFormatに合わせる
   AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &clientDataFormat, sizeOfAudioStreamBasicDescription);
   
+  // 曲の先頭にシークする
   ExtAudioFileSeek(extAudioFile, 0);
   
   canPlay = YES;
   
+  // 曲情報を取得しておく
   currentArtwork = inItem.artwork;
   currentArtist = inItem.artist;
   currentAlbumTitle = inItem.albumTitle;
   currentTitle = inItem.title;
   
+  [self showMusicDataForInfoCenter];
+  
+  // デリゲートメソッドのthisFunctionIsCalledAtBeginningOfMusicを実行する
   if ([self.delegate respondsToSelector:@selector(thisFunctionIsCalledAtBeginningOfMusic)]) {
     [self.delegate thisFunctionIsCalledAtBeginningOfMusic];
   }
@@ -154,6 +187,11 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
   // Stream Formatを設定し直す。
   AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &clientDataFormat, sizeof(clientDataFormat));
   
+  // オーディオセッションを"Playback"に設定して、バックグラウンド再生できるようにする
+  AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+  [audioSession setCategory:AVAudioSessionCategoryPlayback error:NULL];
+  [audioSession setActive:YES error:NULL];
+
   // もし曲の再生中に呼び出されていたら再生を再開する。
   if (playingNow) {
     AudioOutputUnitStart(audioUnit);
@@ -301,6 +339,11 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
     playingNow = NO;
     pauseWhenCurrentMusicFinishedIsEnable = NO;
     
+    // オーディオセッションを"Playback"に設定して、バックグラウンド再生できるようにする
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:NULL];
+    [audioSession setActive:YES error:NULL];
+
     // Audio Unitを準備する。
     [self initAudioUnit];
   }
@@ -308,6 +351,7 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
 }
 
 
+// シングルトンにする
 static PureMusicPlayer *sharedInstance;
 
 + (PureMusicPlayer *)sharedManager {

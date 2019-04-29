@@ -14,11 +14,7 @@ class ViewController: UIViewController {
   @IBOutlet weak var artistLabel: UILabel!
   @IBOutlet weak var albumLabel: UILabel!
   @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var pauseWhenCurrentMusicFinishedSwitch: UISwitch!
-  @IBOutlet weak var hideOfMetaDataSwitch: UISwitch!
   @IBOutlet weak var togglePlayPauseButton: UIButton!
-  
-  @IBOutlet weak var Re_initAudioUnitButton: UIButton!
   
   let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
   
@@ -27,53 +23,16 @@ class ViewController: UIViewController {
     if UserDefaults.standard.bool(forKey: "hideMetaDataIsEnable") { // "曲名を隠す"がONだったら
       if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // デフォルトのアートワークを用意できたら、
         artworkView.image = defaultArtwork
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtwork: MPMediaItemArtwork.init(boundsSize: defaultArtwork.size, requestHandler: { (size) -> UIImage in
-            return defaultArtwork
-          }),
-          MPMediaItemPropertyArtist: "Artist",
-          MPMediaItemPropertyAlbumTitle: "Album",
-          MPMediaItemPropertyTitle: "Title"]
-        
-      } else { // デフォルトのアートワークを用意できなかったら、
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtist: "Artist",
-          MPMediaItemPropertyAlbumTitle: "Album",
-          MPMediaItemPropertyTitle: "Title"]
       }
-      
       artistLabel.text = "Artist"
       albumLabel.text = "Album"
       titleLabel.text = "Title"
-      
     } else if player.canPlay { // "曲名を隠す"がOFFで、プレーヤーの準備ができていたら、
       if let artwork: UIImage = player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) { // playerのcurrentArtworkをUIImage型に変換できたら、
         artworkView.image = artwork
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtwork: player.currentArtwork,
-          MPMediaItemPropertyArtist: player.currentArtist,
-          MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
-          MPMediaItemPropertyTitle: player.currentTitle]
-        
       } else if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // playerのcurrentArtworkをUIImage型に変換出来なくてかつ、デフォルトのアートワークを用意できたら、
         artworkView.image = defaultArtwork
-        
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtwork: MPMediaItemArtwork.init(boundsSize: defaultArtwork.size, requestHandler: { (size) -> UIImage in
-            return defaultArtwork
-          }),
-          MPMediaItemPropertyArtist: player.currentArtist,
-          MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
-          MPMediaItemPropertyTitle: player.currentTitle]
-      } else { // 上のどれも出来なかったら、
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtist: player.currentArtist,
-          MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
-          MPMediaItemPropertyTitle: player.currentTitle]
       }
-      
       artistLabel.text = player.currentArtist
       albumLabel.text = player.currentAlbumTitle
       titleLabel.text = player.currentTitle
@@ -135,12 +94,6 @@ class ViewController: UIViewController {
   @IBAction func skipToNextButtonPushed(_ sender: UIButton) {
     player.skipToNext()
   }
-  
-  
-  @IBAction func re_initAudioUnitButtonPushed(_ sender: UIButton) {
-    player.reInitAudioUnit()
-  }
-  
 }
 
 

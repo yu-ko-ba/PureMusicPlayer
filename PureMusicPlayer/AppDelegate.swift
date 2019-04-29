@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Override point for customization after application launch.
     
     // コントロールセンターからの操作を受け付けるようにする。
+    // PureMusicPlayerクラスに書いた方が良いんだろうけどObjective-Cに書き直すのめんどくさいからPureMusicPlayerクラスをswiftで書き直すまで放置。
     let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
     let commandCenter: MPRemoteCommandCenter = MPRemoteCommandCenter.shared()
     commandCenter.playCommand.addTarget { (event) in

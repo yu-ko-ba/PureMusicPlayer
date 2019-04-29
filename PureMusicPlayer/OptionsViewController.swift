@@ -12,41 +12,24 @@ class OptionsViewController: UIViewController {
   
   @IBOutlet weak var pauseWhenCurrentMusicFinishedSwitch: UISwitch!
   @IBOutlet weak var hideMetaDataSwitch: UISwitch!
+  @IBOutlet weak var reinitAudioUnitButton: UIButton!
   
   let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
   
-  
-  @objc func thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender: UISwitch) {
+  // pauseWhenCurrentMusicFinishedSwitchの値が変更されたときの処理
+  @objc func thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchValueChanged(sender: UISwitch) {
+    // pauseWhenCurrentMusicFinishedSwitchのオン・オフの値をPureMusicPlayerに渡す
     player.pauseWhenCurrentMusicFinishedIsEnable = sender.isOn
   }
   
   
+  // thisFunctionCallWhenHideMetaDataSwitchの値が変更されたときの処理
   @objc func thisFunctionCallWhenHideMetaDataSwitchValueChanged() {
+    // UserDefaultsにhideMetaDataSwitchの値を保存する
     UserDefaults.standard.set(hideMetaDataSwitch.isOn, forKey: "hideMetaDataIsEnable")
     
-    if UserDefaults.standard.bool(forKey: "hideMetaDataIsEnable") { // "曲名を隠す"がONだったら
-      if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // デフォルトのアートワークを用意できたら、
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtwork: MPMediaItemArtwork.init(boundsSize: defaultArtwork.size, requestHandler: { (size) -> UIImage in
-            return defaultArtwork
-          }),
-          MPMediaItemPropertyArtist: "Artist",
-          MPMediaItemPropertyAlbumTitle: "Album",
-          MPMediaItemPropertyTitle: "Title"]
-        
-      } else { // デフォルトのアートワークを用意できなかったら、
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-          MPMediaItemPropertyArtist: "Artist",
-          MPMediaItemPropertyAlbumTitle: "Album",
-          MPMediaItemPropertyTitle: "Title"]
-      }
-    } else if player.canPlay { // "曲名を隠す"がOFFで、プレーヤーの準備ができていたら、
-      MPNowPlayingInfoCenter.default().nowPlayingInfo = [
-        MPMediaItemPropertyArtwork: player.currentArtwork,
-        MPMediaItemPropertyArtist: player.currentArtist,
-        MPMediaItemPropertyAlbumTitle: player.currentAlbumTitle,
-        MPMediaItemPropertyTitle: player.currentTitle]
-    }
+    // コントロールセンターの表示を更新する
+    player.showMusicDataForInfoCenter()
   }
   
   
@@ -54,20 +37,42 @@ class OptionsViewController: UIViewController {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
     
+    player.delegate = self
+    
+    // pauseWhenCurrentMusicFinishedSwitchがオンのときのスイッチの色を黒にする
+    pauseWhenCurrentMusicFinishedSwitch.onTintColor = UIColor.black
+    
+    // pauseWhenCurrentMusicFinishedSwitchにPureMusicPlayer.pauseWhenCurrentMusicFinishedIsEnableの値を代入する
     pauseWhenCurrentMusicFinishedSwitch.isOn = player.pauseWhenCurrentMusicFinishedIsEnable
-    pauseWhenCurrentMusicFinishedSwitch.addTarget(self, action: #selector(thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchPushed(sender:)), for: UIControl.Event.valueChanged)
-
+    
+    // pauseWhenCurrentMusicFinishedSwitchの値が変更されてときにthisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchValueChanged()を実行する
+    pauseWhenCurrentMusicFinishedSwitch.addTarget(self, action: #selector(thisFunctionCallWhenPauseWhenCurrentMusicFinishedSwitchValueChanged(sender:)), for: UIControl.Event.valueChanged)
+    
+    // hideMetaDataSwitchがオンのときのスイッチの色を黒にする
+    hideMetaDataSwitch.onTintColor = UIColor.black
+    
+    // hideMetaDataSwitchにUserDefaultsのhideMetaDataIsEnableの値を代入する
     hideMetaDataSwitch.isOn = UserDefaults.standard.bool(forKey: "hideMetaDataIsEnable")
+    
+    // hideMetaDataSwitchの値が変更されてときにthisFunctionCallWhenHideMetaDataSwitchValueChanged()を実行する
     hideMetaDataSwitch.addTarget(self, action: #selector(thisFunctionCallWhenHideMetaDataSwitchValueChanged), for: UIControl.Event.valueChanged)
+    
+    // reInitAudioUnitButtonの角を丸くする
+    reinitAudioUnitButton.layer.borderColor = UIColor.black.cgColor
+    reinitAudioUnitButton.layer.borderWidth = 2
+    reinitAudioUnitButton.layer.cornerRadius = 10
+    reinitAudioUnitButton.layer.masksToBounds = true
   }
   
   
-    @IBAction func reInitAudioUnitButtonPushed(_ sender: UIButton) {
-      player.reInitAudioUnit()
-    }
+  @IBAction func reInitAudioUnitButtonPushed(_ sender: UIButton) {
+    // audioUnitをinitし直す
+    player.reInitAudioUnit()
+  }
 }
 
 
+// PureMusicPlayerの再生が停止されたり、一時停止されたときの処理
 extension OptionsViewController: PureMusicPlayerDelegate {
   func thisFunctionCallWhenMusicPaused() {
     DispatchQueue.main.async {
