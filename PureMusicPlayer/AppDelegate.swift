@@ -45,11 +45,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       player.skipToNext()
       return MPRemoteCommandHandlerStatus.success
     }
-
-        
+    
     // 起動したかの確認用
     print("起動しました。")
-
+    
     return true
   }
   

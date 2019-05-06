@@ -59,7 +59,11 @@ class ViewController: UIViewController {
     artistLabel.adjustsFontSizeToFitWidth = true
     albumLabel.adjustsFontSizeToFitWidth = true
     titleLabel.adjustsFontSizeToFitWidth = true
-    
+  }
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    // dismiss()で帰ってきたときはviewDidLoad()が呼ばれないからdismiss()で帰ってきたときも必要な処理はここに書く。
     // PureMusicPlayerDelegateからの操作を受け付けるようにする。
     player.delegate = self
     
@@ -69,10 +73,10 @@ class ViewController: UIViewController {
   
   
   @IBAction func chooseButtonPushed(_ sender: UIButton) {
-    let picker: MPMediaPickerController = MPMediaPickerController()
-    picker.delegate = self
-    picker.allowsPickingMultipleItems = true
-    present(picker, animated: true, completion: nil)
+    //    let picker: MPMediaPickerController = MPMediaPickerController()
+    //    picker.delegate = self
+    //    picker.allowsPickingMultipleItems = true
+    //    present(picker, animated: true, completion: nil)
   }
   
   

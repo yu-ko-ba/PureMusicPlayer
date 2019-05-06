@@ -47,11 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showMusicDataForInfoCenter;
 
--(void)prepareToPlay:(MPMediaItem*)inURL;
+-(void)prepareToPlay:(MPMediaItem*)inItem;
+-(void)setPlaylist:(MPMediaItemCollection*)mediaItemCollection;
+
+-(void)prepareToPlayWithURL:(NSURL*)url;
+-(void)setPlayURLList:(NSArray<NSURL *>*)inURLs;
 
 -(void)reInitAudioUnit;
-
--(void)setPlaylist:(MPMediaItemCollection*)mediaItemCollection;
 
 -(void)play;
 -(void)pause;
