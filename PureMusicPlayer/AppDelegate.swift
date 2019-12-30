@@ -17,35 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     
-    // コントロールセンターからの操作を受け付けるようにする。
-    // PureMusicPlayerクラスに書いた方が良いんだろうけどObjective-Cに書き直すのめんどくさいからPureMusicPlayerクラスをswiftで書き直すまで放置。
-    let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
-    let commandCenter: MPRemoteCommandCenter = MPRemoteCommandCenter.shared()
-    commandCenter.playCommand.addTarget { (event) in
-      player.play()
-      return MPRemoteCommandHandlerStatus.success
-    }
-    commandCenter.pauseCommand.addTarget { (event) in
-      player.pause()
-      return MPRemoteCommandHandlerStatus.success
-    }
-    commandCenter.togglePlayPauseCommand.addTarget { (event) in
-      player.togglePlayPause()
-      return MPRemoteCommandHandlerStatus.success
-    }
-    commandCenter.stopCommand.addTarget { (event) in
-      player.stop()
-      return MPRemoteCommandHandlerStatus.success
-    }
-    commandCenter.previousTrackCommand.addTarget { (event) in
-      player.skipToPrevious()
-      return MPRemoteCommandHandlerStatus.success
-    }
-    commandCenter.nextTrackCommand.addTarget { (event) in
-      player.skipToNext()
-      return MPRemoteCommandHandlerStatus.success
-    }
-    
     // 起動したかの確認用
     print("起動しました。")
     

@@ -10,8 +10,14 @@ import UIKit
 
 class PlayersTableViewController: UITableViewController {
   
+  @objc func dismissWithAnimation() {
+    dismiss(animated: true, completion: nil)
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "default close string"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
     
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
@@ -40,17 +46,21 @@ class PlayersTableViewController: UITableViewController {
     if indexPath.row == 0 {
       cell.textLabel?.text = "iTunes"
     } else {
-      cell.textLabel?.text = "PureMusicPlayer"
+      cell.textLabel?.text = "Pure Music Player"
     }
+    
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
     
     return cell
   }
   
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    
     if indexPath.row == 0 {
-      if let iTunesAlbumsTableViewController: iTunesAlbumsTableViewController = storyboard?.instantiateViewController(withIdentifier: "iTunesAlbumsTableViewController") as? iTunesAlbumsTableViewController {
-        navigationController?.pushViewController(iTunesAlbumsTableViewController, animated: true)
+      if let iTunesArtistTableViewController: iTunesArtistTableViewController = storyboard?.instantiateViewController(withIdentifier: "iTunesArtistTableViewController") as? iTunesArtistTableViewController {
+        navigationController?.pushViewController(iTunesArtistTableViewController, animated: true)
       }
     } else {
       if let pureMusicPlayerArtistsTableViewController: PureMusicPlayerArtistsTableViewController = storyboard?.instantiateViewController(withIdentifier: "pureMusicPlayerArtistsTableViewController") as? PureMusicPlayerArtistsTableViewController {

@@ -7,15 +7,19 @@
 //
 
 import UIKit
+import AVFoundation
 
 class PureMusicPlayerArtistsTableViewController: UITableViewController {
   
-  var musicLibrary: [String: [String: [String: URL]]] = [:]
-  //                 ↑artists  ↑albums  ↑titles  ↑music URL
+  @IBOutlet var artistsTableView: UITableView!
+  
+//  var musicLibrary: [String: [String: [String: [String: URL]]]] = [:]
+  //                 artists  albums  fileNames titles  URLs
   
   var artistsList: [String] = []
   
-  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  //  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
   
   
   @objc func dismissWithAnimation() {
@@ -23,82 +27,108 @@ class PureMusicPlayerArtistsTableViewController: UITableViewController {
   }
   
   
-  func setToMusicLibrary(url: URL) {
-    var artistName: String = url.pathComponents[url.pathComponents.count - 3]
-    var albumName: String = url.pathComponents[url.pathComponents.count - 2]
-    let fileName: String = url.lastPathComponent
-    
-    let asset: AVAsset = AVAsset(url: url)
-    for metaData in asset.metadata {
-      switch metaData.commonKey {
-      case AVMetadataKey.commonKeyArtist:
-        if let artist: String = metaData.value as? String {
-          artistName = artist
-        }
-      case AVMetadataKey.commonKeyAlbumName:
-        if let album: String = metaData.value as? String {
-          albumName = album
-        }
-      default:
-        break
-      }
-    }
-    
-    if musicLibrary[artistName] == nil {
-      musicLibrary[artistName] = [albumName: [fileName: url]]
-    }
-    if musicLibrary[artistName]?[albumName] == nil {
-      musicLibrary[artistName]?[albumName] = [fileName: url]
-    }
-    musicLibrary[artistName]?[albumName]?[fileName] = url
-  }
+//  func setToMusicLibrary(url: URL) {
+//    var artistName: String = url.pathComponents[url.pathComponents.count - 3]
+//    var albumName: String = url.pathComponents[url.pathComponents.count - 2]
+//    var titleName: String = url.lastPathComponent
+//
+//    let fileName: String = url.lastPathComponent
+//
+//    let asset: AVAsset = AVAsset(url: url)
+//    for metaData in asset.metadata {
+//      switch metaData.commonKey {
+//      case AVMetadataKey.commonKeyArtist:
+//        if let artist: String = metaData.value as? String {
+//          artistName = artist
+//        }
+//      case AVMetadataKey.commonKeyAlbumName:
+//        if let album: String = metaData.value as? String {
+//          albumName = album
+//        }
+//      case AVMetadataKey.commonKeyTitle:
+//        if let title: String = metaData.value as? String {
+//          titleName = title
+//        }
+//      default:
+//        break
+//      }
+//    }
+//
+//    if albumName == "Documents" {
+//      artistName = "Unknown"
+//      albumName = "Unknown"
+//    }
+//
+//    if musicLibrary[artistName] == nil {
+//      musicLibrary[artistName] = [albumName: [fileName: [titleName: url]]]
+//    }
+//    if musicLibrary[artistName]?[albumName] == nil {
+//      musicLibrary[artistName]?[albumName] = [fileName: [titleName: url]]
+//    }
+//    musicLibrary[artistName]?[albumName]?[fileName] = [titleName: url]
+//  }
   
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "閉じる", style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "default close string"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
     
-    let fileManager: FileManager = FileManager.default
+//    let fileManager: FileManager = FileManager.default
+//    
+//    let documentsPath: String = NSHomeDirectory() + "/Documents"
+//    
+//    if let objects: FileManager.DirectoryEnumerator = fileManager.enumerator(atPath: documentsPath) {
+//      while let subPath: String = objects.nextObject() as? String {
+//        if let fileType = objects.fileAttributes?[FileAttributeKey.type] as? FileAttributeType {
+//          if fileType != FileAttributeType.typeDirectory {
+//            let fullPath: String = documentsPath + "/" + subPath
+//            let url: URL = URL(fileURLWithPath: fullPath)
+//            switch url.pathExtension {
+//            case "3gp": break
+//            case "3g2": break
+//            case "aac": break
+//            case "avi": break
+//            case "m2ts": break
+//            case "m4a": break
+//            case "m4b": break
+//            case "m4p": break
+//            case "mov": break
+//            case "mp4": break
+//            case "wav": break
+//            case "mkv": break
+//            case "mka": break
+//            case "mp3": break
+//            case "alac": break
+//            case "flac": break
+//            case "ac3": break
+//            case "vob": break
+//            default:
+//              continue
+//            }
+//            setToMusicLibrary(url: url)
+//          }
+//        } else {
+//          print("ファイルタイプの取得に失敗しました。")
+//        }
+//      }
+//    } else {
+//      print("\"~/Documents/*\"の取得に失敗しました。")
+//    }
     
-    let documentsPath: String = NSHomeDirectory() + "/Documents"
-    
-    if let objects: FileManager.DirectoryEnumerator = fileManager.enumerator(atPath: documentsPath) {
-      while let subPath: String = objects.nextObject() as? String {
-        if let fileType = objects.fileAttributes?[FileAttributeKey.type] as? FileAttributeType {
-          if fileType != FileAttributeType.typeDirectory {
-            let fullPath: String = documentsPath + "/" + subPath
-            let url: URL = URL(fileURLWithPath: fullPath)
-            switch url.pathExtension {
-            case "aac":
-              setToMusicLibrary(url: url)
-            case "mp3":
-              setToMusicLibrary(url: url)
-            case "wav":
-              setToMusicLibrary(url: url)
-            case "m4a":
-              setToMusicLibrary(url: url)
-            case "flac":
-              setToMusicLibrary(url: url)
-            default:
-              break
-            }
-          }
-        } else {
-          print("ファイルタイプの取得に失敗しました。")
-        }
-      }
-    } else {
-      print("\"~/Documents/*\"の取得に失敗しました。")
-    }
-    
-    artistsList += Array(musicLibrary.keys).sorted()
+    artistsList = Array(player.musics.keys).sorted()
     
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem
+  }
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(true)
+    artistsTableView.reloadData()
   }
   
   
@@ -125,6 +155,8 @@ class PureMusicPlayerArtistsTableViewController: UITableViewController {
       cell.textLabel?.text = artistsList[indexPath.row]
     }
     
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
+    
     return cell
   }
   
@@ -133,7 +165,8 @@ class PureMusicPlayerArtistsTableViewController: UITableViewController {
     tableView.deselectRow(at: indexPath, animated: true)
     
     if let pureMusicPlayerAlbumsTableViewController: PureMusicPlayerAlbumsTableViewController = storyboard?.instantiateViewController(withIdentifier: "pureMusicPlayerAlbumsTableViewController") as? PureMusicPlayerAlbumsTableViewController {
-      if let albums = musicLibrary[artistsList[indexPath.row]] {
+//      if let albums: [String: [String: [String: URL]]] = musicLibrary[artistsList[indexPath.row]] {
+      if let albums: [String: [String: [Any]]] = player.musics[artistsList[indexPath.row]] {
         pureMusicPlayerAlbumsTableViewController.albums = albums
         pureMusicPlayerAlbumsTableViewController.navigationItem.title = artistsList[indexPath.row]
         

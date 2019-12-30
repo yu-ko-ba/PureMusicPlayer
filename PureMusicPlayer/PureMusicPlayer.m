@@ -31,6 +31,8 @@ AudioStreamBasicDescription clientDataFormat;
 
 NSArray<MPMediaItem *> *playlist;
 NSArray<NSURL *> *playURLList;
+NSDictionary<NSString *, id>*playlistDictionary;
+NSArray<NSString *>*playlistDictionaryNamesList;
 
 NSUInteger playlistLength;
 
@@ -47,7 +49,8 @@ NSUInteger playlistLength;
     [self pause];
     self.currentMusicNumber = 0;
     if (withURL) {
-      [self prepareToPlayWithURL:playURLList[currentMusicNumber]];
+//[self prepareToPlayWithDictionary:[playlistDictionary objectForKey:playlistDictionaryNamesList[currentMusicNumber]]];
+            [self prepareToPlayWithURL:playURLList[currentMusicNumber]];
     } else {
       [self prepareToPlay:playlist[currentMusicNumber]];
     }
@@ -55,6 +58,7 @@ NSUInteger playlistLength;
     // 次の曲を準備する(と、次の曲が再生される)。
     currentMusicNumber++;
     if (withURL) {
+//      [self prepareToPlayWithDictionary:[playlistDictionary objectForKey:playlistDictionaryNamesList[currentMusicNumber]]];
       [self prepareToPlayWithURL:playURLList[currentMusicNumber]];
     } else {
       [self prepareToPlay:playlist[currentMusicNumber]];
@@ -250,21 +254,29 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
   NSString *albumTitle = url.pathComponents[url.pathComponents.count - 2];
   NSString *title = url.lastPathComponent;
   
-  //  AVAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
-  //  for (AVMetadataItem *metaData in asset.metadata) {
-  //    if (metaData.commonKey == AVMetadataCommonKeyArtwork) {
-  //      defaultArtworkImage = metaData.value;
-  //    }
-  //    if (metaData.commonKey == AVMetadataCommonKeyArtist) {
-  //      artist = [NSString stringWithFormat:@"%@", metaData.value];
-  //    }
-  //    if (metaData.commonKey == AVMetadataCommonKeyAlbumName) {
-  //      albumTitle = [NSString stringWithFormat:@"%@", metaData.value];
-  //    }
-  //    if (metaData.commonKey == AVMetadataCommonKeyTitle) {
-  //      title = [NSString stringWithFormat:@"%@", metaData.value];
-  //    }
-  //  }
+  if ([albumTitle  isEqual: @"Documents"]) {
+    artist = @"Unknown";
+    albumTitle = @"Unknown";
+  }
+  
+//    AVAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
+//    for (AVMetadataItem *metaData in asset.metadata) {
+//      if (metaData.commonKey == AVMetadataCommonKeyArtwork) {
+//        defaultArtworkImage = metaData.value;
+//      }
+//      if (metaData.commonKey == AVMetadataCommonKeyArtist) {
+////        artist = [NSString stringWithFormat:@"%@", metaData.value];
+//        artist = metaData.value;
+//      }
+//      if (metaData.commonKey == AVMetadataCommonKeyAlbumName) {
+////        albumTitle = [NSString stringWithFormat:@"%@", metaData.value];
+//        albumTitle = metaData.value;
+//      }
+//      if (metaData.commonKey == AVMetadataCommonKeyTitle) {
+////        title = [NSString stringWithFormat:@"%@", metaData.value];
+//        title = metaData.value;
+//      }
+//    }
   
   if (defaultArtworkImage != nil) {
     MPMediaItemArtwork *defaultArtwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:defaultArtworkImage.size requestHandler:^UIImage * _Nonnull(CGSize size) {
@@ -295,6 +307,79 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
   AudioOutputUnitStop(audioUnit);
   
   [self prepareToPlayWithURL:playURLList[currentMusicNumber]];
+}
+//-----------------------------------------------------------
+
+
+//↑の2つにまとめて対応してみる------------------------------------
+- (void)prepareToPlayWithDictionary:(NSDictionary *)inDictionary {
+  printf("%s\n", [inDictionary objectForKey:@"url"]);
+  // 再生する曲のassetURLをextAudioFileに開く
+  OSStatus resultOfOpenURL = ExtAudioFileOpenURL((__bridge CFURLRef _Nonnull)([inDictionary objectForKey:@"url"]), &extAudioFile);
+  
+  // assetURLを開くのに失敗したら、returnする
+  if (resultOfOpenURL != noErr) {
+    fprintf(stderr, "\"ExtAudioFileOpenURL\"でエラーが起こりました。");
+    canPlay = NO;
+    return;
+  }
+  
+  AudioStreamBasicDescription inFileDataFormat;
+  UInt32 sizeOfAudioStreamBasicDescription = sizeof(AudioStreamBasicDescription);
+  
+  // extAudioFileに入っているデータのフォーマットをinFileDataFormatに記録する
+  ExtAudioFileGetProperty(extAudioFile, kExtAudioFileProperty_FileDataFormat, &sizeOfAudioStreamBasicDescription, &inFileDataFormat);
+  
+  // 出力するデータのフォーマットを、inFileDataFormatを元に、LinearPCM形式にする
+  clientDataFormat.mSampleRate = inFileDataFormat.mSampleRate;
+  clientDataFormat.mChannelsPerFrame = inFileDataFormat.mChannelsPerFrame;
+  clientDataFormat.mFormatID = kAudioFormatLinearPCM;
+  clientDataFormat.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
+  clientDataFormat.mBitsPerChannel = 8 * sizeof(Float32);
+  clientDataFormat.mBytesPerPacket = sizeof(Float32);
+  clientDataFormat.mBytesPerFrame = sizeof(Float32);
+  clientDataFormat.mFramesPerPacket = 1;
+  clientDataFormat.mReserved = 0;
+  
+  // extAudioFileの出力するときのフォーマットをclientDataFormatに記録されたものにする
+  ExtAudioFileSetProperty(extAudioFile, kExtAudioFileProperty_ClientDataFormat, sizeOfAudioStreamBasicDescription, &clientDataFormat);
+  
+  // audioUnitの再生フォーマットをclientDataFormatに合わせる
+  AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &clientDataFormat, sizeOfAudioStreamBasicDescription);
+  
+  // 曲の先頭にシークする
+  ExtAudioFileSeek(extAudioFile, 0);
+  
+  canPlay = YES;
+  withURL = NO;
+  
+  // 曲情報を取得しておく
+  UIImage *artworkImage = [inDictionary objectForKey:@"artwork"];
+  currentArtwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:artworkImage.size requestHandler:^UIImage * _Nonnull(CGSize size) {
+    return artworkImage;
+  }];
+  currentArtist = [inDictionary objectForKey:@"artist"];
+  currentAlbumTitle = [inDictionary objectForKey:@"album"];
+  currentTitle = [inDictionary objectForKey:@"title"];
+  
+  [self showMusicDataForInfoCenter];
+  
+  // デリゲートメソッドのthisFunctionIsCalledAtBeginningOfMusicを実行する
+  if ([self.delegate respondsToSelector:@selector(thisFunctionIsCalledAtBeginningOfMusic)]) {
+    [self.delegate thisFunctionIsCalledAtBeginningOfMusic];
+  }
+}
+
+- (void)setPlaylistWithDictionarys:(NSDictionary *)inDictionarys hoge:(NSArray<NSString *> *)inDictionarysNameList {
+  playlistDictionary = inDictionarys;
+  playlistDictionaryNamesList = inDictionarysNameList;
+  playlistLength = inDictionarys.count - 1;
+  currentMusicNumber = 0;
+  
+  // 再生中の曲をもう一度選んで再生しようとしたときもバグらないように連打してもバグらないように一旦停止する。
+  AudioOutputUnitStop(audioUnit);
+  
+  [self prepareToPlayWithDictionary:[playlistDictionary objectForKey:playlistDictionaryNamesList[currentMusicNumber]]];
 }
 //-----------------------------------------------------------
 
@@ -381,6 +466,7 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
 
 
 // ◀︎◀︎ ←コレ
+// なぜか連打してもバグらない
 - (void)skipToPrevious {
   if (canPlay) { // 停止されていないときだけ実行する。
     if (playingNow) { // 再生中なら
@@ -391,14 +477,14 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
       if (currentSeek >= 30000) { // 30000フレーム以上再生されていたら、
         // 曲の先頭に戻る。
         ExtAudioFileSeek(extAudioFile, 0);
-      } else if (currentMusicNumber >= 1){ // そうでなくて、プレイリストの先頭でなかったら、
-        // 連打してもバグらないように一旦停止する。
-        AudioOutputUnitStop(audioUnit);
-        
+      } else if (currentMusicNumber >= 1) { // そうでなくて、プレイリストの先頭でなかったら、
         // 一つ前の曲を再生する。
         currentMusicNumber--;
-        [self prepareToPlay:playlist[currentMusicNumber]];
-        [self play];
+        if (withURL) {
+          [self prepareToPlayWithURL:playURLList[currentMusicNumber]];
+        } else {
+          [self prepareToPlay:playlist[currentMusicNumber]];
+        }
       } else { // プレイリストの先頭でかつ、再生したのが30000フレーム未満だったら
         // 一時停止して、曲の先頭に戻る。
         [self pause];
@@ -410,7 +496,11 @@ static OSStatus thisIsCallbackFunction(void* inRefCon, AudioUnitRenderActionFlag
     } else if (currentMusicNumber >= 1) { // 再生中でなくてプレイリストの先頭でなかったら、
       // 一つ前の曲に戻る。
       currentMusicNumber--;
-      [self prepareToPlay:playlist[currentMusicNumber]];
+      if (withURL) {
+        [self prepareToPlayWithURL:playURLList[currentMusicNumber]];
+      } else {
+        [self prepareToPlay:playlist[currentMusicNumber]];
+      }
     } else { // プレイリストの先頭の曲で一時停止していたら、
       // 曲の先頭に戻る。
       ExtAudioFileSeek(extAudioFile, 0);

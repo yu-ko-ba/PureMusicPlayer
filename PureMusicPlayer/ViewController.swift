@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class ViewController: UIViewController {
   
@@ -16,27 +17,33 @@ class ViewController: UIViewController {
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var togglePlayPauseButton: UIButton!
   
-  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  //  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
   
   
   func showMetaData() {
-    if UserDefaults.standard.bool(forKey: "hideMetaDataIsEnable") { // "曲名を隠す"がONだったら
-      if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // デフォルトのアートワークを用意できたら、
-        artworkView.image = defaultArtwork
-      }
-      artistLabel.text = "Artist"
-      albumLabel.text = "Album"
-      titleLabel.text = "Title"
-    } else if player.canPlay { // "曲名を隠す"がOFFで、プレーヤーの準備ができていたら、
-      if let artwork: UIImage = player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) { // playerのcurrentArtworkをUIImage型に変換できたら、
-        artworkView.image = artwork
-      } else if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // playerのcurrentArtworkをUIImage型に変換出来なくてかつ、デフォルトのアートワークを用意できたら、
-        artworkView.image = defaultArtwork
-      }
-      artistLabel.text = player.currentArtist
-      albumLabel.text = player.currentAlbumTitle
-      titleLabel.text = player.currentTitle
-    }
+    //    if UserDefaults.standard.bool(forKey: "hideMetaDataIsEnable") { // "曲名を隠す"がONだったら
+    //      if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // デフォルトのアートワークを用意できたら、
+    //        artworkView.image = defaultArtwork
+    //      }
+    //      artistLabel.text = NSLocalizedString("Artist", comment: "default artist string")
+    //      albumLabel.text = NSLocalizedString("Album", comment: "default album string")
+    //      titleLabel.text = NSLocalizedString("Title", comment: "default title string")
+    //    } else if player.canPlay { // "曲名を隠す"がOFFで、プレーヤーの準備ができていたら、
+    //      if let artwork: UIImage = player.currentArtwork.image(at: CGSize(width: 1200, height: 1200)) { // playerのcurrentArtworkをUIImage型に変換できたら、
+    //        artworkView.image = artwork
+    //      } else if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") { // playerのcurrentArtworkをUIImage型に変換出来なくてかつ、デフォルトのアートワークを用意できたら、
+    //        artworkView.image = defaultArtwork
+    //      }
+    //      artistLabel.text = player.currentArtist
+    //      albumLabel.text = player.currentAlbumTitle
+    //      titleLabel.text = player.currentTitle
+    //    }
+    
+    artworkView.image = player.artworkImage()
+    artistLabel.text = player.artistName()
+    albumLabel.text = player.albumTitle()
+    titleLabel.text = player.musicTitle()
   }
   
   
@@ -85,11 +92,6 @@ class ViewController: UIViewController {
   }
   
   
-  @IBAction func stopButtonPushed(_ sender: UIButton) {
-    player.stop()
-  }
-  
-  
   @IBAction func skipToPreviousButtonPushed(_ sender: UIButton) {
     player.skipToPrevious()
   }
@@ -108,7 +110,8 @@ extension ViewController: MPMediaPickerControllerDelegate {
       dismiss(animated: true, completion: nil)
     }
     
-    player.setPlaylist(mediaItemCollection)
+    //    player.setPlaylist(mediaItemCollection)
+    player.setQueue(withMPMediaItemCollection: mediaItemCollection)
     player.play()
     
     togglePlayPauseButtonSetCurrentStatus()
@@ -148,8 +151,8 @@ extension ViewController: PureMusicPlayerDelegate {
     if let defaultArtwork: UIImage = UIImage.init(named: "defaultArtwork") {
       artworkView.image = defaultArtwork
     }
-    artistLabel.text = "Artist"
-    albumLabel.text = "Album"
-    titleLabel.text = "Title"
+    artistLabel.text = NSLocalizedString("Artist", comment: "default artist string")
+    albumLabel.text = NSLocalizedString("Album", comment: "default album string")
+    titleLabel.text = NSLocalizedString("Title", comment: "default title string")
   }
 }

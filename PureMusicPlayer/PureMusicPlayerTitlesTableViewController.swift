@@ -12,12 +12,15 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
   
   @IBOutlet var titlesTableView: UITableView!
   
-  var files: [String: URL] = [:]
+//  var files: [String: [String: URL]] = [:]
+  var files: [String: [Any]] = [:]
+  
   var filesNameList: [String] = []
   
   var fontSize: CGFloat?
   
-  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  //  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
   
   
   @objc func dismissWithAnimation() {
@@ -28,7 +31,9 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "閉じる", style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
+    player.delegate = self
+    
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "default close string"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
     
     filesNameList += Array(files.keys).sorted()
     
@@ -57,6 +62,8 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
   
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    tableView.deselectRow(at: indexPath, animated: true)
+    
     let cell = tableView.dequeueReusableCell(withIdentifier: "titlesCell", for: indexPath)
     
     // Configure the cell...
@@ -66,23 +73,13 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
         cell.textLabel?.font = UIFont.systemFont(ofSize: size * 2)
       }
     } else {
-      if let url = files[filesNameList[indexPath.row - 1]] {
-        if navigationItem.title == player.currentAlbumTitle && filesNameList[indexPath.row - 1] == player.currentTitle + "." + url.pathExtension {
-          cell.textLabel?.text = "▶︎  " + player.currentTitle
-        } else {
-          cell.textLabel?.text = filesNameList[indexPath.row - 1]
-          
-          if let url: URL = files[filesNameList[indexPath.row - 1]] {
-            let asset: AVAsset = AVAsset(url: url)
-            for metaData in asset.metadata {
-              if metaData.commonKey == AVMetadataKey.commonKeyTitle {
-                if let title = metaData.value as? String {
-                  cell.textLabel?.text = title
-                }
-              }
-            }
-          }
-        }
+//      if navigationItem.title == player.currentAlbumTitle && [String](files[filesNameList[indexPath.row - 1]]!.keys)[0] == player.currentTitle {
+      if navigationItem.title == player.currentAlbumTitle && files[filesNameList[indexPath.row - 1]]?[0] as! String == player.currentTitle {
+//        cell.textLabel?.text = "▶︎  " + [String](files[filesNameList[indexPath.row - 1]]!.keys)[0]
+        cell.textLabel?.text = "▶︎  " + String(files[filesNameList[indexPath.row - 1]]?[0] as! String)
+      } else {
+//        cell.textLabel?.text = [String](files[filesNameList[indexPath.row - 1]]!.keys)[0]
+        cell.textLabel?.text = files[filesNameList[indexPath.row - 1]]?[0] as? String
       }
       
       if let size: CGFloat = fontSize {
@@ -90,24 +87,35 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
       }
     }
     
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
+    
     return cell
   }
   
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    
     if indexPath.row == 0 {
       var urls: [URL] = []
+      
+      var counter: Int = 0
       for key: String in filesNameList {
-        if let url: URL = files[key] {
+//        if let url: URL = files[key]?[[String](files[filesNameList[counter]]!.keys)[0]] {
+        if let url: URL = files[key]?[1] as? URL {
           urls += [url]
         }
+        counter += 1
       }
       
-      player.setPlayURLList(urls)
+      //      player.setPlayURLList(urls)
+      player.setQueue(withURLs: urls)
       dismiss(animated: true, completion: nil)
     } else {
-      if let url: URL = files[filesNameList[indexPath.row - 1]] {
-        player.setPlayURLList([url])
+//      if let url: URL = files[filesNameList[indexPath.row - 1]]?[[String](files[filesNameList[indexPath.row - 1]]!.keys)[0]] {
+      if let url: URL = files[filesNameList[indexPath.row - 1]]?[1] as? URL {
+        //        player.setPlayURLList([url])
+        player.setQueue(withURLs: [url])
       }
     }
     player.play()
@@ -159,4 +167,15 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
    }
    */
   
+}
+
+
+extension PureMusicPlayerTitlesTableViewController: PureMusicPlayerDelegate {
+  func thisFunctionIsCalledAtBeginningOfMusic() {
+    DispatchQueue.main.async {
+      let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "titlesCell", for: IndexPath(row: Int(self.player.currentMusicNumber), section: 0))
+      cell.textLabel?.text = "▶︎  " + self.player.currentTitle
+      self.titlesTableView.reloadData()
+    }
+  }
 }

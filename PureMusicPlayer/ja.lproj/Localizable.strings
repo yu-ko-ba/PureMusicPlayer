@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  PureMusicPlayer
+
+  Created by Yu Kobayashi on 2019/05/11.
+  Copyright © 2019 Yu Kobayashi. All rights reserved.
+*/
+
+"Artist" = "アーティスト";
+
+"Album" = "アルバム";
+
+"Title" = "タイトル";
+
+"Unknown" = "不明";
+
+"Close" = "閉じる";

@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class iTunesAlbumsTableViewController: UITableViewController {
   
   @IBOutlet var albumsTableView: UITableView!
   
+  var artistName: String?
   var albums: [MPMediaItemCollection] = []
-  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
   
   
   @objc func dismissWithAnimation() {
@@ -34,18 +36,22 @@ class iTunesAlbumsTableViewController: UITableViewController {
     let predicate = MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem)
     albumQuery.addFilterPredicate(predicate)
     
+    let artistFilter = MPMediaPropertyPredicate(value: artistName, forProperty: MPMediaItemPropertyAlbumArtist)
+    albumQuery.addFilterPredicate(artistFilter)
+    
     if let collections = albumQuery.collections {
       albums = collections
     } else {
       print("アルバム情報の取得に失敗しました。")
     }
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "閉じる", style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "default close string"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
     
   }
   
   
   override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(true)
     albumsTableView.reloadData()
   }
   
@@ -81,11 +87,15 @@ class iTunesAlbumsTableViewController: UITableViewController {
       cell.textLabel?.text = albums[indexPath.row].representativeItem?.albumTitle
     }
     
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
+    
     return cell
   }
   
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    
     if let titlesTableViewController: iTunesTitlesTableViewController = storyboard?.instantiateViewController(withIdentifier: "iTunesTitlesTableViewController") as? iTunesTitlesTableViewController {
       titlesTableViewController.collection = albums[indexPath.row]
       titlesTableViewController.navigationItem.title = albums[indexPath.row].representativeItem?.albumTitle

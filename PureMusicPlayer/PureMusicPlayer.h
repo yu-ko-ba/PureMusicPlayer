@@ -53,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)prepareToPlayWithURL:(NSURL*)url;
 -(void)setPlayURLList:(NSArray<NSURL *>*)inURLs;
 
+-(void)prepareToPlayWithDictionary:(NSDictionary*)inDictionary;
+-(void)setPlaylistWithDictionarys:(NSDictionary*)inDictionarys hoge:(NSArray<NSString *>*)inDictionarysNameList;
+
 -(void)reInitAudioUnit;
 
 -(void)play;

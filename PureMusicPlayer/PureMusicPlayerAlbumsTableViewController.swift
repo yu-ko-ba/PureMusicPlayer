@@ -10,10 +10,15 @@ import UIKit
 
 class PureMusicPlayerAlbumsTableViewController: UITableViewController {
   
-  var albums: [String: [String: URL]] = [:]
+  @IBOutlet var albumsTableView: UITableView!
+  
+//  var albums: [String: [String: [String: URL]]] = [:]
+  var albums: [String: [String: [Any]]] = [:]
+  
   var albumsTitleList: [String] = []
   
-  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  //  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
   
   
   @objc func dismissWithAnimation() {
@@ -24,7 +29,7 @@ class PureMusicPlayerAlbumsTableViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "閉じる", style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "default close string"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
     
     albumsTitleList += Array(albums.keys).sorted()
     
@@ -34,6 +39,13 @@ class PureMusicPlayerAlbumsTableViewController: UITableViewController {
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem
   }
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(true)
+    albumsTableView.reloadData()
+  }
+  
   
   // MARK: - Table view data source
   
@@ -57,6 +69,9 @@ class PureMusicPlayerAlbumsTableViewController: UITableViewController {
     } else {
       cell.textLabel?.text = albumsTitleList[indexPath.row]
     }
+    
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
+    
     return cell
   }
   
@@ -65,7 +80,8 @@ class PureMusicPlayerAlbumsTableViewController: UITableViewController {
     tableView.deselectRow(at: indexPath, animated: true)
     
     if let pureMusicPlayerTitlesTableViewController: PureMusicPlayerTitlesTableViewController = storyboard?.instantiateViewController(withIdentifier: "pureMusicPlayerTitlesTableViewController") as? PureMusicPlayerTitlesTableViewController {
-      if let files: [String: URL] = albums[albumsTitleList[indexPath.row]] {
+//      if let files: [String: [String: URL]] = albums[albumsTitleList[indexPath.row]] {
+      if let files: [String: [Any]] = albums[albumsTitleList[indexPath.row]] {
         pureMusicPlayerTitlesTableViewController.files = files
         pureMusicPlayerTitlesTableViewController.navigationItem.title = albumsTitleList[indexPath.row]
         

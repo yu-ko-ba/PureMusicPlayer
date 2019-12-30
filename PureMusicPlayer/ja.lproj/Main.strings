@@ -1,0 +1,45 @@
+
+/* Class = "UILabel"; text = "Album"; ObjectID = "4dJ-QR-uPB"; */
+"4dJ-QR-uPB.text" = "アルバム";
+
+/* Class = "UIButton"; normalTitle = "Back"; ObjectID = "64i-S1-E41"; */
+"64i-S1-E41.normalTitle" = "戻る";
+
+/* Class = "UILabel"; text = "Artist"; ObjectID = "Df5-ab-EXM"; */
+"Df5-ab-EXM.text" = "アーティスト";
+
+/* Class = "UIButton"; normalTitle = "Reinitialize Audio Unit"; ObjectID = "Dh9-X6-ZBf"; */
+"Dh9-X6-ZBf.normalTitle" = "Audio Unitを作り直す";
+
+/* Class = "UIButton"; normalTitle = "Browse"; ObjectID = "IDT-6i-NKK"; */
+"IDT-6i-NKK.normalTitle" = "曲を選ぶ";
+
+/* Class = "UIButton"; normalTitle = "▶︎"; ObjectID = "Uok-YW-fx3"; */
+"Uok-YW-fx3.normalTitle" = "▶︎";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "VoS-ib-eqb"; */
+"VoS-ib-eqb.text" = "タイトル";
+
+/* Class = "UILabel"; text = "Hide meta data"; ObjectID = "fRb-Zk-HlK"; */
+"fRb-Zk-HlK.text" = "曲名を隠す";
+
+/* Class = "UINavigationItem"; title = "Artists"; ObjectID = "fqB-qx-Gi8"; */
+"fqB-qx-Gi8.title" = "アーティスト";
+
+/* Class = "UILabel"; text = "Pause when current music is finished"; ObjectID = "jga-XO-f6Z"; */
+"jga-XO-f6Z.text" = "今の曲が終わったら一時停止する";
+
+/* Class = "UIButton"; normalTitle = "Settings"; ObjectID = "lU1-D9-3zQ"; */
+"lU1-D9-3zQ.normalTitle" = "設定";
+
+/* Class = "UINavigationItem"; title = "Albums"; ObjectID = "lxn-tC-Gb9"; */
+"lxn-tC-Gb9.title" = "アルバム";
+
+/* Class = "UINavigationItem"; title = "Music"; ObjectID = "q45-nF-BBK"; */
+"q45-nF-BBK.title" = "Music";
+
+/* Class = "UIButton"; normalTitle = "▶︎▶︎"; ObjectID = "rVO-3L-crd"; */
+"rVO-3L-crd.normalTitle" = "▶︎▶︎";
+
+/* Class = "UIButton"; normalTitle = "◀︎◀︎"; ObjectID = "uf1-0D-vRc"; */
+"uf1-0D-vRc.normalTitle" = "◀︎◀︎";

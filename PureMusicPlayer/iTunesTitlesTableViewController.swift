@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class iTunesTitlesTableViewController: UITableViewController {
   @IBOutlet var titlesTableView: UITableView!
   
   var collection: MPMediaItemCollection?
   var fontSize: CGFloat?
-  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  //  let player: PureMusicPlayer = PureMusicPlayer.sharedManager()
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
   
   
   @objc func dismissWithAnimation() {
@@ -35,7 +37,7 @@ class iTunesTitlesTableViewController: UITableViewController {
       fontSize = textLabel.font.pointSize
     }
     
-    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "閉じる", style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "default close string"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissWithAnimation))
   }
   
   
@@ -67,9 +69,9 @@ class iTunesTitlesTableViewController: UITableViewController {
       }
     } else {
       if collection?.items[indexPath.row - 1].albumTitle == player.currentAlbumTitle && collection?.items[indexPath.row - 1].title == player.currentTitle {
-        cell.textLabel?.text = "▶︎  " + player.currentTitle
+        cell.textLabel?.text = "▶︎  " + String(format: "%02d", indexPath.row) + ". " + player.currentTitle
       } else {
-        cell.textLabel?.text = collection?.items[indexPath.row - 1].title
+        cell.textLabel?.text = String(format: "%02d", indexPath.row) + ". " + (collection?.items[indexPath.row - 1].title ?? "UNKNOWN")
       }
       
       if let size: CGFloat = fontSize {
@@ -77,21 +79,27 @@ class iTunesTitlesTableViewController: UITableViewController {
       }
     }
     
+    cell.textLabel?.adjustsFontSizeToFitWidth = true
+    
     return cell
   }
   
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    
     if indexPath.row == 0 {
       if let playlist: MPMediaItemCollection = collection {
-        player.setPlaylist(playlist)
+        //        player.setPlaylist(playlist)
+        player.setQueue(withMPMediaItemCollection: playlist)
         dismiss(animated: true, completion: nil)
       } else {
         print("collectionの値がnilです。")
       }
     } else {
       if let item: MPMediaItem = collection?.items[indexPath.row - 1] {
-        player.setPlaylist(MPMediaItemCollection(items: [item]))
+        //        player.setPlaylist(MPMediaItemCollection(items: [item]))
+        player.setQueue(withMPMediaItemCollection: MPMediaItemCollection(items: [item]))
       } else {
         print("collectionからitemを取得できませんでした。")
       }
