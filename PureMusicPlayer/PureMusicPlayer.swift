@@ -62,6 +62,8 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
     
     let documentsPath: String = NSHomeDirectory() + "/Documents"
     
+    print(documentsPath)
+    
     var library: [String: [String: [String: [Any]]]] = [:]
     
     if let objects: FileManager.DirectoryEnumerator = fileManager.enumerator(atPath: documentsPath) {
@@ -157,10 +159,11 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
 //              print(metaData.stringValue ?? "---")
 //            }
 //
-//            print("metadata------------")
-//            for metaData in asset.metadata {
-//              print(metaData.stringValue ?? "---")
-//            }
+            print("metadata------------")
+            for metaData in asset.metadata {
+              print(metaData)
+              print(metaData.stringValue ?? "---")
+            }
 
             if albumName == "Documents" || albumName == "Library" || albumName == "Music" {
               artistName = "Unknown"
