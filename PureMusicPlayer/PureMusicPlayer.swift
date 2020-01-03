@@ -106,17 +106,17 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
             
             let asset: AVAsset = AVAsset(url: url)
             for metaData in asset.metadata {
-              switch metaData.commonKey {
-              case AVMetadataKey.commonKeyArtist:
-                if let artist: String = metaData.value as? String {
+              switch metaData.identifier {
+              case AVMetadataIdentifier.iTunesMetadataAlbumArtist:
+                if let artist: String = metaData.stringValue {
                   artistName = artist
                 }
-              case AVMetadataKey.commonKeyAlbumName:
-                if let album: String = metaData.value as? String {
+              case AVMetadataIdentifier.iTunesMetadataAlbum:
+                if let album: String = metaData.stringValue {
                   albumName = album
                 }
-              case AVMetadataKey.commonKeyTitle:
-                if let title: String = metaData.value as? String {
+              case AVMetadataIdentifier.iTunesMetadataSongName:
+                if let title: String = metaData.stringValue {
                   titleName = title
                 }
               default:
@@ -128,42 +128,55 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.id3) {
 //              print(metaData.stringValue ?? "---")
 //            }
-//
+
 //            print("audioFile-----------")
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.audioFile) {
 //              print(metaData.stringValue ?? "---")
 //            }
-//
+
 //            print("common---------------")
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.common) {
 //              print(metaData.stringValue ?? "---")
 //            }
-//
+
 //            print("icy------------------")
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.icy) {
 //              print(metaData.stringValue ?? "---")
 //            }
-//
+
 //            print("iso------------------")
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.isoUserData) {
 //              print(metaData.stringValue ?? "---")
 //            }
-//
+
 //            print("itunes--------------")
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.iTunes) {
-//              print(metaData.stringValue ?? "---")
+//              if metaData.identifier == AVMetadataIdentifier.iTunesMetadataAlbumArtist {
+//                print("Album Artist: " + (metaData.stringValue ?? "---"))
+//              }
+//              if metaData.identifier == AVMetadataIdentifier.iTunesMetadataAlbum {
+//                print("Album       : " + (metaData.stringValue ?? "---"))
+//              }
+//              if metaData.identifier == AVMetadataIdentifier.iTunesMetadataSongName {
+//                print("Title       : " + (metaData.stringValue ?? "---"))
+//              }
 //            }
-//
+
 //            print("quickTime----------")
 //            for metaData in AVMetadataItem.metadataItems(from: asset.metadata, withKey: nil, keySpace: AVMetadataKeySpace.quickTimeMetadata) {
 //              print(metaData.stringValue ?? "---")
 //            }
-//
-            print("metadata------------")
-            for metaData in asset.metadata {
-              print(metaData)
-              print(metaData.stringValue ?? "---")
-            }
+
+//            print("metadata------------")
+//            for metaData in asset.metadata {
+//              metaData.stringValue
+//              metaData.identifier
+//              AVMetadataIdentifier.iTunesMetadataAlbumArtist
+//              AVMetadataKey.iTunesMetadataKeyAlbumArtist
+//              print(metaData.value(forKey: AVMetadataKey.iTunesMetadataKeyAlbumArtist))
+//              print(metaData.stringValue ?? "---")
+//              print(AVMetadataKey.iTunesMetadataKeyAlbumArtist)
+//            }
 
             if albumName == "Documents" || albumName == "Library" || albumName == "Music" {
               artistName = "Unknown"
