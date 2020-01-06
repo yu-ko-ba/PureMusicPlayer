@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_0" orientation="portrait" appearance="dark"/>
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
@@ -12,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -35,7 +35,7 @@
                                     <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
                                 <connections>
-                                    <segue destination="krj-ix-o7G" kind="presentation" modalPresentationStyle="automatic" id="ZL8-df-1Ef"/>
+                                    <segue destination="krj-ix-o7G" kind="presentation" modalPresentationStyle="fullScreen" id="ZL8-df-1Ef"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="cP1-hR-jGb">
@@ -171,9 +171,9 @@
         <!--Options View Controller-->
         <scene sceneID="yl0-NG-x7r">
             <objects>
-                <viewController id="krj-ix-o7G" customClass="OptionsViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="krj-ix-o7G" customClass="OptionsViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1xJ-S0-dYr">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64i-S1-E41">
@@ -187,7 +187,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dh9-X6-ZBf" userLabel="Reinit Audio Unit Button">
-                                <rect key="frame" x="16" y="489" width="288" height="39"/>
+                                <rect key="frame" x="16" y="509" width="288" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Reinitialize Audio Unit">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -284,7 +284,7 @@
         <!--iTunes Artist Table View Controller-->
         <scene sceneID="L5E-tH-gWC">
             <objects>
-                <tableViewController storyboardIdentifier="iTunesArtistTableViewController" id="uhr-hm-b7X" customClass="iTunesArtistTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="iTunesArtistTableViewController" id="uhr-hm-b7X" customClass="iTunesArtistTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vc5-gB-C46">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -312,7 +312,7 @@
         <!--Albums-->
         <scene sceneID="86D-hC-0nz">
             <objects>
-                <tableViewController storyboardIdentifier="iTunesAlbumsTableViewController" id="toh-TH-iJj" customClass="iTunesAlbumsTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="iTunesAlbumsTableViewController" id="toh-TH-iJj" customClass="iTunesAlbumsTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="af6-uS-j4t">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -344,7 +344,7 @@
         <!--Pure Music Player Albums Table View Controller-->
         <scene sceneID="DlX-gc-0ra">
             <objects>
-                <tableViewController storyboardIdentifier="pureMusicPlayerAlbumsTableViewController" id="y47-wY-3Iw" customClass="PureMusicPlayerAlbumsTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="pureMusicPlayerAlbumsTableViewController" id="y47-wY-3Iw" customClass="PureMusicPlayerAlbumsTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ZCF-c3-d26">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -375,7 +375,7 @@
         <!--iTunes Titles Table View Controller-->
         <scene sceneID="Vyy-4w-VFO">
             <objects>
-                <tableViewController storyboardIdentifier="iTunesTitlesTableViewController" id="Pvj-OT-TTI" customClass="iTunesTitlesTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="iTunesTitlesTableViewController" id="Pvj-OT-TTI" customClass="iTunesTitlesTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dcy-DB-WeS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -406,7 +406,7 @@
         <!--Pure Music Player Titles Table View Controller-->
         <scene sceneID="bSY-wu-n7u">
             <objects>
-                <tableViewController storyboardIdentifier="pureMusicPlayerTitlesTableViewController" id="zcS-QS-LYl" customClass="PureMusicPlayerTitlesTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="pureMusicPlayerTitlesTableViewController" id="zcS-QS-LYl" customClass="PureMusicPlayerTitlesTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="otk-nO-CQu">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -437,7 +437,7 @@
         <!--Music-->
         <scene sceneID="ymX-e6-u3D">
             <objects>
-                <tableViewController id="XYa-Tp-UFb" customClass="PlayersTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="XYa-Tp-UFb" customClass="PlayersTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="yak-2A-FY3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -466,7 +466,7 @@
         <!--Artists-->
         <scene sceneID="HTC-YP-ksA">
             <objects>
-                <tableViewController storyboardIdentifier="pureMusicPlayerArtistsTableViewController" id="TPj-9b-rRc" customClass="PureMusicPlayerArtistsTableViewController" customModule="PureMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="pureMusicPlayerArtistsTableViewController" id="TPj-9b-rRc" customClass="PureMusicPlayerArtistsTableViewController" customModule="Pure" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="bw4-YD-Gt1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

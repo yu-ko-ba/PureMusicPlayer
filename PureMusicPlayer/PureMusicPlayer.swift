@@ -62,7 +62,7 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
     
     let documentsPath: String = NSHomeDirectory() + "/Documents"
     
-    print(documentsPath)
+//    print(documentsPath)
     
     var library: [String: [String: [String: [Any]]]] = [:]
     
@@ -406,22 +406,22 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
       let asset: AVAsset = AVAsset(url: inURL)
       
       for metaData in asset.metadata {
-        switch metaData.commonKey {
-        case AVMetadataKey.commonKeyArtwork:
+        switch metaData.identifier {
+        case AVMetadataIdentifier.iTunesMetadataCoverArt:
           if let data: Data = metaData.dataValue {
             if let image = UIImage(data: data) {
               currentArtworkImage = image
             }
           }
-        case AVMetadataKey.commonKeyArtist:
+        case AVMetadataIdentifier.iTunesMetadataArtist:
           if let artist: String = metaData.value as? String {
             currentArtist = artist
           }
-        case AVMetadataKey.commonKeyAlbumName:
+        case AVMetadataIdentifier.iTunesMetadataAlbum:
           if let album: String = metaData.value as? String {
             currentAlbumTitle = album
           }
-        case AVMetadataKey.commonKeyTitle:
+        case AVMetadataIdentifier.iTunesMetadataSongName:
           if let title: String = metaData.value as? String {
             currentTitle = title
           }

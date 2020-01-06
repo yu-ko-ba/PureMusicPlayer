@@ -76,10 +76,10 @@ class PureMusicPlayerTitlesTableViewController: UITableViewController {
 //      if navigationItem.title == player.currentAlbumTitle && [String](files[filesNameList[indexPath.row - 1]]!.keys)[0] == player.currentTitle {
       if navigationItem.title == player.currentAlbumTitle && files[filesNameList[indexPath.row - 1]]?[0] as! String == player.currentTitle {
 //        cell.textLabel?.text = "▶︎  " + [String](files[filesNameList[indexPath.row - 1]]!.keys)[0]
-        cell.textLabel?.text = "▶︎  " + String(files[filesNameList[indexPath.row - 1]]?[0] as! String)
+        cell.textLabel?.text = "▶︎  " + String(format: "%02d", indexPath.row) + ". " + String(files[filesNameList[indexPath.row - 1]]?[0] as! String)
       } else {
 //        cell.textLabel?.text = [String](files[filesNameList[indexPath.row - 1]]!.keys)[0]
-        cell.textLabel?.text = files[filesNameList[indexPath.row - 1]]?[0] as? String
+        cell.textLabel?.text = String(format: "%02d", indexPath.row) + ". " + String((files[filesNameList[indexPath.row - 1]]?[0] as? String)!)
       }
       
       if let size: CGFloat = fontSize {
