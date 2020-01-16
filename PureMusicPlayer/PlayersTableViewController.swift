@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class PlayersTableViewController: UITableViewController {
+  
+  let player: PureMusicPlayer = PureMusicPlayer.sharedInstance
+  
   
   @objc func dismissWithAnimation() {
     dismiss(animated: true, completion: nil)
@@ -35,7 +39,7 @@ class PlayersTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
-    return 2
+    return 3
   }
   
   
@@ -43,11 +47,21 @@ class PlayersTableViewController: UITableViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: "playersCell", for: indexPath)
     
     // Configure the cell...
-    if indexPath.row == 0 {
+    switch indexPath.row {
+    case 0:
       cell.textLabel?.text = "iTunes"
-    } else {
+    case 1:
       cell.textLabel?.text = "Pure Music Player"
+    case 2:
+      cell.textLabel?.text = "MPMediaPicker"
+    default:
+      break
     }
+//    if indexPath.row == 0 {
+//      cell.textLabel?.text = "iTunes"
+//    } else {
+//      cell.textLabel?.text = "Pure Music Player"
+//    }
     
     cell.textLabel?.adjustsFontSizeToFitWidth = true
     
@@ -58,17 +72,35 @@ class PlayersTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     
-    if indexPath.row == 0 {
+    switch indexPath.row {
+    case 0:
       if let iTunesArtistTableViewController: iTunesArtistTableViewController = storyboard?.instantiateViewController(withIdentifier: "iTunesArtistTableViewController") as? iTunesArtistTableViewController {
-        navigationController?.pushViewController(iTunesArtistTableViewController, animated: true)
+      navigationController?.pushViewController(iTunesArtistTableViewController, animated: true)
       }
-    } else {
+    case 1:
       if let pureMusicPlayerArtistsTableViewController: PureMusicPlayerArtistsTableViewController = storyboard?.instantiateViewController(withIdentifier: "pureMusicPlayerArtistsTableViewController") as? PureMusicPlayerArtistsTableViewController {
         navigationController?.pushViewController(pureMusicPlayerArtistsTableViewController, animated: true)
       }
+    case 2:
+      let picker: MPMediaPickerController = MPMediaPickerController()
+      picker.delegate = self
+      picker.allowsPickingMultipleItems = true
+      present(picker, animated: true, completion: nil)
+    default:
+      break
     }
+    
+    
+//    if indexPath.row == 0 {
+//      if let iTunesArtistTableViewController: iTunesArtistTableViewController = storyboard?.instantiateViewController(withIdentifier: "iTunesArtistTableViewController") as? iTunesArtistTableViewController {
+//        navigationController?.pushViewController(iTunesArtistTableViewController, animated: true)
+//      }
+//    } else {
+//      if let pureMusicPlayerArtistsTableViewController: PureMusicPlayerArtistsTableViewController = storyboard?.instantiateViewController(withIdentifier: "pureMusicPlayerArtistsTableViewController") as? PureMusicPlayerArtistsTableViewController {
+//        navigationController?.pushViewController(pureMusicPlayerArtistsTableViewController, animated: true)
+//      }
+//    }
   }
-  
   
   /*
    // Override to support conditional editing of the table view.
@@ -115,4 +147,18 @@ class PlayersTableViewController: UITableViewController {
    }
    */
   
+}
+
+
+extension PlayersTableViewController: MPMediaPickerControllerDelegate {
+  func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
+    player.setQueue(withMPMediaItemCollection: mediaItemCollection)
+    player.play()
+    
+    dismissWithAnimation()
+  }
+  
+  func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
+    dismissWithAnimation()
+  }
 }
