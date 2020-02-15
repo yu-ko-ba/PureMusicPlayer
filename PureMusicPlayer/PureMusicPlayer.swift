@@ -502,9 +502,14 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
     if canPlay {
       print("再生を開始します。")
       AudioOutputUnitStart(audioUnit)
+      
       playingNow = true
       
       delegate?.thisFunctionCallWhenPlayingStart()
+      
+      // Bluetooth機器から再生を再開してうまくいかないとき用
+      sleep(1)
+      AudioOutputUnitStart(audioUnit)
     }
   }
   
@@ -519,6 +524,7 @@ class PureMusicPlayer: PureMusicPlayerDelegate {
   
   
   func togglePlayPause() {
+    print("togglePlayPause")
     if playingNow {
       pause()
     } else {
